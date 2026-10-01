@@ -1,0 +1,14 @@
+{
+  "name": "freemarket-desktop",
+  "private": true,
+  "version": "0.2.0",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "tauri": "tauri",
+    "icons": "tauri icon icon-source.png",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

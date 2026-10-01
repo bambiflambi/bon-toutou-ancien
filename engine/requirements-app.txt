@@ -1,0 +1,4 @@
+# Embarqué dans l'app (fabrication automatique). Le moteur marche aussi sans : tout est détecté à l'exécution.
+pypdf>=4,<6
+ocrmac>=1.0 ; sys_platform == "darwin"
+llama-cpp-python>=0.3,<0.4

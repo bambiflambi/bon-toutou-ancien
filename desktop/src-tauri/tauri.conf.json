@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Freemarket",
+  "version": "0.2.0",
+  "identifier": "org.freemarket.app",
+  "build": { "frontendDist": "../dist" },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      { "label": "main", "title": "Freemarket", "width": 1180, "height": 820, "minWidth": 380, "minHeight": 560 }
+    ],
+    "security": {
+      "csp": null,
+      "capabilities": ["default"]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Ton dossier administratif vivant",
+    "longDescription": "Freemarket range tes papiers administratifs dans un seul dossier sur ton ordinateur. Zéro serveur, zéro compte : rien ne sort sans ton accord.",
+    "copyright": "Freemarket — AGPL-3.0",
+    "externalBin": ["binaries/freemarket-engine"],
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "macOS": { "minimumSystemVersion": "11.0" }
+  }
+}

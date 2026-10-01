@@ -1,0 +1,28 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "La fenêtre de Freemarket (moteur local sur 127.0.0.1) peut seulement : ouvrir le sélecteur de dossier, et ouvrir dans ton navigateur la page publique de Freemarket ou ta messagerie.",
+  "windows": [
+    "main"
+  ],
+  "remote": {
+    "urls": [
+      "http://127.0.0.1:*"
+    ]
+  },
+  "permissions": [
+    "core:default",
+    "dialog:allow-open",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        {
+          "url": "https://github.com/*"
+        },
+        {
+          "url": "mailto:*"
+        }
+      ]
+    }
+  ]
+}
