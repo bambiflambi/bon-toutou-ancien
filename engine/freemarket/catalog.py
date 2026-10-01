@@ -29,6 +29,8 @@ TYPES = {}           # chaque type porte "_origin"
 DETAILS = {}         # type -> [(motif, modèle, origine)]
 EXPIRY_HINTS = []
 TEMPLATES = {}
+ORGS = []            # (pays, nom, url https ou "", note) : organismes à prévenir (packs officiels seulement)
+ECHEANCES = []       # (pays, libellé, MM-JJ, catégorie, note, origine) : dates fixes de l'année (déclarations…)
 RULES = []           # règles « contient X → champ = valeur » : (indice, champ, valeur, type, origine, id)
 CONTRIBUTION = {}    # où envoyer une proposition (pack Socle) : {"email": ..., "url": ...}
 PACKS = []           # résumé des packs chargés (pour Réglages)
@@ -134,6 +136,15 @@ def _apply(p, kind):
         n_rules += len(ok)
     for k, v in p.get("templates", {}).items():
         TEMPLATES[k] = v
+    for cc in p.get("countries", {}) or [None]:
+        for e in p.get("echeances", []):
+            if isinstance(e, dict) and re.match(r"^\d{2}-\d{2}$", str(e.get("jour", ""))) and e.get("label"):
+                ECHEANCES.append((cc, e["label"], e["jour"], e.get("cat"), e.get("note", ""), org))
+        if official:  # un lien vers un site ne vient que d'un pack officiel (jamais d'un pack importé)
+            for o in p.get("organismes", []):
+                url = str(o.get("url") or "") if isinstance(o, dict) else ""
+                if isinstance(o, dict) and o.get("nom") and (not url or re.match(r"^https://[a-z0-9.-]+/[^\s\"'<>]*$", url)):
+                    ORGS.append((cc, o["nom"], url, o.get("note", "")))
     if official and isinstance(p.get("contribution"), dict):
         CONTRIBUTION.update(p["contribution"])
     # règles simples : un indice (texte exact, jamais une formule) -> un champ
@@ -161,7 +172,7 @@ def load(bureau_fm=None, disabled=()):
     """(Re)charge tout le catalogue. bureau_fm = dossier .freemarket du bureau (packs importés + règles perso)."""
     for d in (COUNTRIES, CATEGORIES, CAT_FOLDERS_FR, SUB_FOLDERS_FR, COUNTRY_HINTS, TYPES, DETAILS, TEMPLATES):
         d.clear()
-    for l in (EMITTERS, EXPIRY_HINTS, PACKS, WARNINGS, RULES):
+    for l in (EMITTERS, EXPIRY_HINTS, PACKS, WARNINGS, RULES, ECHEANCES, ORGS):
         del l[:]
     CONTRIBUTION.clear()
     names = [n[:-5] for n in os.listdir(OFFICIAL_DIR) if n.endswith(".json")]

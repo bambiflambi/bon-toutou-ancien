@@ -44,8 +44,8 @@ DOC_FIELDS = ("id", "suivi", "type", "label", "person", "country", "cat", "sub",
               "orig_name", "sha", "status", "added_at", "note", "detail")
 DOSSIER_FIELDS = ("id", "template", "recipient", "country", "created_at", "state", "assign", "folder", "zip", "manifest",
                   "finalized_at", "sent_at")
-PROFILE_KEYS = ("owner", "countries", "privacy", "disabled_packs", "holders", "guide")          # suivent l'utilisateur sur tous ses appareils
-DEVICE_KEYS = ("use_ollama", "ollama_model", "ai_mode", "ai_engine", "ai_bench", "ai_never", "maj_auto", "maj_last")      # use_ollama / ollama_model : IA locale activée / modèle (noms historiques)                      # propres à cet appareil
+PROFILE_KEYS = ("owner", "countries", "privacy", "disabled_packs", "holders", "guide", "mail", "orgs_done", "notify", "plus_done", "trusted")          # suivent l'utilisateur sur tous ses appareils
+DEVICE_KEYS = ("theme", "use_ollama", "ollama_model", "ai_mode", "ai_engine", "ai_bench", "ai_never", "maj_auto", "maj_last")      # use_ollama / ollama_model : IA locale activée / modèle (noms historiques)                      # propres à cet appareil
 # Niveaux de confidentialité par défaut (catégorie -> local | autorisation | externe). Un document non trié est « local ».
 DEFAULT_PRIVACY = {"01": "local", "04": "local", "05": "local", "06": "local", "09": "local", "10": "local", "13": "local",
                    "02": "autorisation", "03": "autorisation", "07": "autorisation", "12": "autorisation", "14": "autorisation",
@@ -157,7 +157,8 @@ class Bureau:
         self.newer_data = False
         self.settings = {"countries": ["FR", "NZ"], "use_ollama": False, "ollama_model": "", "owner": "", "ai_mode": "texte", "ai_engine": "auto", "ai_bench": {}, "ai_never": False, "maj_auto": False, "maj_last": "",
                          "privacy": dict(DEFAULT_PRIVACY), "disabled_packs": [],
-                         "holders": [], "guide": {"etape": 0, "fini": False, "masque": False}}
+                         "holders": [], "guide": {"etape": 0, "fini": False, "masque": False},
+                         "mail": "", "orgs_done": [], "notify": [], "plus_done": [], "trusted": "", "theme": "champagne"}
         for pth in (self.profile_path, self.device_settings_path):
             d = read_json(pth, {}) or {}
             if int(d.get("format", 1) or 1) > FORMAT:
@@ -1164,6 +1165,80 @@ class Bureau:
             total = self.db.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
             return {"ok": True, "docs": total, "from_meta": from_meta, "from_names": n, "backup": bak}
 
+    # ------------------------------------------------------------ échéances, calendrier, contacts
+    def events(self, horizon_days=730):
+        """Dates à venir : expirations lues dans les documents actuels + échéances fixes des packs pays actifs."""
+        t0 = today()
+        out = []
+        for d in self.db.execute("SELECT * FROM docs WHERE status='actuel' AND expiry IS NOT NULL AND expiry!=''").fetchall():
+            try:
+                e = dt.date.fromisoformat(d["expiry"])
+            except ValueError:
+                continue
+            out.append({"t": d["label"], "d": e.isoformat(), "cc": d["country"], "c": d["cat"], "k": "expire", "id": d["id"],
+                        "past": e < t0})
+        for cc, label, jour, cat, note, org in catalog.ECHEANCES:
+            if cc and cc not in (self.settings.get("countries") or []):
+                continue
+            m, j = int(jour[:2]), int(jour[3:])
+            for y in (t0.year, t0.year + 1):
+                try:
+                    e = dt.date(y, m, j)
+                except ValueError:
+                    continue
+                if e >= t0:
+                    out.append({"t": label, "d": e.isoformat(), "cc": cc or "INT", "c": cat, "k": "à faire", "note": note})
+                    break
+        lim = (t0 + dt.timedelta(days=horizon_days)).isoformat()
+        return sorted([e for e in out if e["d"] <= lim or e.get("past")], key=lambda e: e["d"])
+
+    def ics(self):
+        """Fichier calendrier (.ics) à importer dans Calendrier, Google Agenda, Outlook… Généré ici, rien ne sort."""
+        def esc_ics(x):
+            return str(x).replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+        stamp = dt.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+        L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Freemarket//Echeances//FR", "CALSCALE:GREGORIAN",
+             "X-WR-CALNAME:Freemarket — échéances"]
+        for e in self.events():
+            if e.get("past"):
+                continue
+            d = e["d"].replace("-", "")
+            nxt = (dt.date.fromisoformat(e["d"]) + dt.timedelta(days=1)).strftime("%Y%m%d")
+            uid = hashlib.sha1(f"{e['t']}|{e['d']}|{e.get('id', '')}".encode()).hexdigest()[:16] + "@freemarket"
+            what = "expire" if e["k"] == "expire" else "à faire"
+            L += ["BEGIN:VEVENT", f"UID:{uid}", f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{d}", f"DTEND;VALUE=DATE:{nxt}",
+                  f"SUMMARY:{esc_ics(e['t'] + ' — ' + what)}",
+                  f"DESCRIPTION:{esc_ics((e.get('note') or 'Date lue dans tes documents par Freemarket.') + ' Pays : ' + e['cc'])}",
+                  "BEGIN:VALARM", "TRIGGER:-P30D", "ACTION:DISPLAY", f"DESCRIPTION:{esc_ics(e['t'])} dans 30 jours", "END:VALARM",
+                  "END:VEVENT"]
+        L.append("END:VCALENDAR")
+        return "\r\n".join(L) + "\r\n"
+
+    def contacts(self):
+        """Tes interlocuteurs, tirés de tes documents (émetteurs) et de tes dossiers (destinataires), avec ce qui leur a été transmis."""
+        C = {}
+        for d in self.db.execute("SELECT emitter,country,cat,label,doc_date,status FROM docs").fetchall():
+            if not d["emitter"] or d["emitter"] == "Inconnu":
+                continue
+            k = ("org", d["emitter"].lower())
+            c = C.setdefault(k, {"nom": d["emitter"].replace("-", " "), "role": "Organisme émetteur", "cc": d["country"], "cat": d["cat"],
+                                 "docs": 0, "dernier": "", "transmis": []})
+            c["docs"] += 1
+            c["dernier"] = max(c["dernier"], d["doc_date"] or "")
+        for k in self.db.execute("SELECT * FROM dossiers WHERE state!='abandonne'").fetchall():
+            T = TEMPLATES.get(k["template"], {"label": k["template"], "pieces": []})
+            key = ("dest", (k["recipient"] or "").lower())
+            c = C.setdefault(key, {"nom": k["recipient"], "role": "Destinataire de dossiers", "cc": k["country"], "cat": None,
+                                   "docs": 0, "dernier": "", "transmis": []})
+            n = 0
+            if k["manifest"]:
+                n = sum(len(p["files"]) for p in json.loads(k["manifest"])["pieces"])
+            c["transmis"].append({"id": k["id"], "label": T["label"], "etat": k["state"], "date": (k["sent_at"] or k["created_at"] or "")[:10], "pieces": n})
+            first = next((pc["types"][0] for pc in T["pieces"] if pc.get("types")), None)
+            if not c["cat"] and first in TYPES:
+                c["cat"] = TYPES[first]["cat"]
+        return sorted(C.values(), key=lambda c: (c["cat"] or "99", c["nom"].lower()))
+
     # ------------------------------------------------------------ état général
     def state(self):
         c = lambda q: self.db.execute(q).fetchone()[0]
@@ -1183,7 +1258,16 @@ class Bureau:
             "countries": {k: v["name"] for k, v in COUNTRIES.items()},
             "categories": CATEGORIES, "subs": SUB_FOLDERS_FR,
             "templates": {k: v["label"] for k, v in TEMPLATES.items()},
-            "sorties": self.sorties()[:30], "packs": catalog.PACKS, "catalog_warnings": catalog.WARNINGS, "newer_data": self.newer_data,
+            "tpl": {k: {"label": v["label"], "n": len(v.get("pieces", [])), "ic": v.get("icone", "")} for k, v in TEMPLATES.items()},
+            "orgs": [{"cc": o[0], "nom": o[1], "url": o[2], "note": o[3]} for o in catalog.ORGS if o[0] in self.settings["countries"]],
+            "sorties": self.sorties()[:30], "packs": catalog.PACKS, "events": self.events(),
+            "local_only": c("SELECT COUNT(*) FROM docs WHERE status='actuel' AND cat IN (%s)" % ",".join(
+                "'%s'" % k for k, v in self.settings["privacy"].items() if v == "local") if any(v == "local" for v in self.settings["privacy"].values()) else "SELECT 0"),
+            "archives_n": c("SELECT COUNT(*) FROM docs WHERE status!='actuel'") + c("SELECT COUNT(*) FROM dossiers WHERE state='envoye'"),
+            "dossiers_open": [{"id": r["id"], "label": TEMPLATES.get(r["template"], {}).get("label", r["template"]), "recipient": r["recipient"],
+                               "missing": (lambda k: k["total"] - k["ok"])(self.resolve(r))}
+                              for r in self.db.execute("SELECT * FROM dossiers WHERE state='en_cours' ORDER BY created_at DESC").fetchall()],
+            "high": len([p for p in self.inbox() if p["confidence"] == "haute" and not p.get("duplicate")]), "catalog_warnings": catalog.WARNINGS, "newer_data": self.newer_data,
             "privacy_levels": sortie.LEVELS, "device": self.device, "local_data": self.local, "format": FORMAT,
             "today": today().isoformat(),
         }

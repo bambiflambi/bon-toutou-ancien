@@ -125,6 +125,19 @@ class H(BaseHTTPRequestHandler):
             if p == "/api/ia":
                 from . import ia
                 return self._json({"engines": ia.engines(force=q.get("force") == "1"), "pulls": ia.PULLS})
+            if p == "/api/events":
+                return self._json(B.events())
+            if p == "/api/contacts":
+                return self._json(B.contacts())
+            if p == "/api/calendrier.ics":
+                body = B.ics().encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/calendar; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Content-Disposition", "attachment; filename=freemarket-echeances.ics")
+                self.end_headers()
+                self.wfile.write(body)
+                return
             if p == "/api/guide":
                 return self._json(B.guide())
             if p == "/api/sorties":

@@ -58,6 +58,25 @@ p, port = start()
 try:
     c, st = call(port, "/api/state")
     check(not st.get("setup") and st["counts"]["inbox"] == 1, "redémarrage : le dossier choisi est repris tout seul")
+    # v0.3 : Aujourd'hui, Calendrier, Contacts, Organismes
+    check(all(k in st for k in ("events", "local_only", "archives_n", "dossiers_open", "high", "tpl", "orgs")), "l'état donne tout ce qu'il faut à Aujourd'hui, au Calendrier et aux Réglages")
+    check(any(e["k"] == "à faire" for e in st["events"]), "le calendrier contient les échéances du pays (déclaration de revenus…)")
+    req = urllib.request.Request(f"http://127.0.0.1:{port}/api/calendrier.ics")
+    with urllib.request.urlopen(req, timeout=20) as r:
+        ics = r.read().decode()
+    check(ics.startswith("BEGIN:VCALENDAR") and "VALARM" in ics, "export .ics : un fichier calendrier avec un rappel avant chaque échéance")
+    c, ct = call(port, "/api/contacts")
+    check(c == 200 and isinstance(ct, list), "contacts : liste tirée des documents et des dossiers")
+    capf = os.path.join(os.path.dirname(HERE), "desktop", "src-tauri", "capabilities", "default.json")
+    if os.path.exists(capf):  # dans le dépôt complet (pas dans une copie du seul moteur)
+        cap = json.load(open(capf))
+        allowed = [a["url"] for p_ in cap["permissions"] if isinstance(p_, dict) and p_.get("identifier") == "opener:allow-open-url" for a in p_["allow"]]
+        import fnmatch
+        links = [o["url"] for o in st["orgs"] if o["url"]]
+        check(links and all(any(fnmatch.fnmatch(u, a) for a in allowed) for u in links), "chaque lien d'organisme est autorisé par l'app (et seulement ceux-là)")
+    _s, _set = call(port, "/api/settings", {"theme": "sauge", "mail": "admin@exemple.fr", "orgs_done": ["Impôts"]})
+    c, st2 = call(port, "/api/state")
+    check(st2["settings"]["theme"] == "sauge" and st2["settings"]["mail"] == "admin@exemple.fr" and st2["settings"]["orgs_done"] == ["Impôts"], "réglages v0.3 enregistrés (thème, adresse admin, organismes prévenus)")
 finally:
     p.terminate(); p.wait()
 # l'app se ferme (même brutalement) : le moteur s'arrête aussi

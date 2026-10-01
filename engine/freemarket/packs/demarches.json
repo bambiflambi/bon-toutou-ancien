@@ -60,7 +60,8 @@
      ],
      "valid": true
     }
-   ]
+   ],
+   "icone": "house"
   },
   "candidature": {
    "label": "Candidater à un emploi",
@@ -92,7 +93,8 @@
      ],
      "valid": true
     }
-   ]
+   ],
+   "icone": "work"
   },
   "vendre_vehicule": {
    "label": "Vendre le véhicule",
@@ -124,7 +126,8 @@
       "assurance_vehicule"
      ]
     }
-   ]
+   ],
+   "icone": "car"
   },
   "declarer_revenus": {
    "label": "Déclarer ses revenus",
@@ -150,7 +153,8 @@
      ],
      "count": 3
     }
-   ]
+   ],
+   "icone": "tax"
   },
   "ouvrir_compte": {
    "label": "Ouvrir un compte bancaire",
@@ -179,7 +183,8 @@
      ],
      "fresh": 60
     }
-   ]
+   ],
+   "icone": "bank"
   }
  }
 }

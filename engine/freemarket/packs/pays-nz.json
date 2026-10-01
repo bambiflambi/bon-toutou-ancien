@@ -109,5 +109,40 @@
     "ird"
    ]
   }
- }
+ },
+ "echeances": [
+  {
+   "label": "Déclaration IR3 (si tu dois en faire une)",
+   "jour": "07-07",
+   "cat": "04",
+   "note": "date limite indicative de l'Inland Revenue"
+  }
+ ],
+ "organismes": [
+  {
+   "nom": "Inland Revenue (myIR)",
+   "url": "https://myir.ird.govt.nz/",
+   "note": "Profile › Contact details"
+  },
+  {
+   "nom": "Immigration New Zealand",
+   "url": "https://www.immigration.govt.nz/",
+   "note": "Immigration Online account"
+  },
+  {
+   "nom": "NZ Transport Agency (Waka Kotahi)",
+   "url": "https://www.nzta.govt.nz/",
+   "note": "Change your address"
+  },
+  {
+   "nom": "Ma banque NZ",
+   "url": "",
+   "note": "ton espace client"
+  },
+  {
+   "nom": "Mon employeur NZ",
+   "url": "",
+   "note": "payroll"
+  }
+ ]
 }

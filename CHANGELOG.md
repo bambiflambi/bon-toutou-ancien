@@ -2,6 +2,16 @@
 
 Les mises à jour ne sont jamais obligatoires. Une nouvelle version lit toujours les données des anciennes.
 
+## 0.3.0 — l'interface de la maquette
+- Nouvelle page **Aujourd'hui** : jusqu'à 3 choses à faire (trier, compléter ou finaliser un dossier, renouveler un document), les 6 prochains mois d'échéances, les 4 raccourcis et ce qui reste sur ton ordinateur.
+- Nouveau **Calendrier** sur 12 mois : expirations lues dans tes documents et grandes échéances de tes pays (déclaration de revenus, IR3). Export **.ics** avec un rappel 30 jours avant, créé sur ton ordinateur.
+- **Contacts** (aperçu) : tes interlocuteurs tirés de tes documents et de tes dossiers, avec ce que tu leur as transmis.
+- **Réglages compartimentés** : une page par sujet (Profil, Confidentialité, Apparence, Adresse admin, Calendrier, Contacts, Organismes, IA locale, Lecture, Mes règles, Sauvegarde, Continuité, Synchronisation, Historique, Mises à jour, Signaler un problème) et **Aller plus loin**, la suite de l'accueil pas à pas.
+- **Organismes** : checklist avec les liens officiels (impots.gouv.fr, ameli, CAF, myIR…), ouverts dans ton navigateur ; l'app n'autorise que ces liens-là.
+- Ce qui arrive bientôt (relève de l'adresse admin, abonnement agenda, sauvegarde, accès d'urgence…) est affiché honnêtement ; « Ça m'intéresse » reste sur ton ordinateur.
+- Trois ambiances : Champagne, Graphite, Sauge. Aucune police ni ressource chargée depuis internet.
+- Documents par pays avec toutes les catégories (vides comprises), Dossiers en cartes, Trier et Archives restylés.
+
 ## 0.2.0 — première version téléchargeable
 - App de bureau (Mac Intel et puce Apple, Windows, Linux) : plus de Terminal, plus d'installation manuelle.
 - Installation guidée : dossier, nom, pays, IA locale (au choix), et ce qui peut sortir sur internet (rien sans ton accord).
