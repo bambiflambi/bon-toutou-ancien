@@ -1,0 +1,22 @@
+{
+ "format": 1,
+ "id": "pays-int",
+ "name": "International",
+ "version": "1.0.0",
+ "official": true,
+ "description": "Banques en ligne, assurances voyage, services sans pays",
+ "countries": {
+  "INT": {
+   "name": "International",
+   "folder": "INT_INTERNATIONAL"
+  }
+ },
+ "country_hints": {
+  "INT": [
+   "wise",
+   "revolut",
+   "paypal",
+   "n26"
+  ]
+ }
+}

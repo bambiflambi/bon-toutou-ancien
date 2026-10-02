@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "La fenêtre de Freemarket (moteur local sur 127.0.0.1) peut seulement : ouvrir le sélecteur de dossier, et ouvrir dans ton navigateur la page publique de Freemarket, ta messagerie ou le site officiel d'un organisme (liste fixe, tirée des packs pays).",
+  "description": "La fenêtre de Bon toutou (moteur local sur 127.0.0.1) peut seulement : ouvrir le sélecteur de dossier, et ouvrir dans ton navigateur la page publique de Bon toutou, ta messagerie ou le site officiel d'un organisme (liste fixe, tirée des packs pays).",
   "windows": [
     "main"
   ],

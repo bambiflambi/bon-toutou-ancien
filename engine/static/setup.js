@@ -1,4 +1,4 @@
-/* Freemarket — installation (premier lancement) et mises à jour / rapport de bug (Réglages).
+/* Bon toutou — installation (premier lancement) et mises à jour / rapport de bug (Réglages).
    L'installation ne demande que ce qui est nécessaire, une chose par écran, et dit ce qu'elle fait. */
 const SSTEPS = ["Bienvenue", "Ton dossier", "Ton nom", "Tes pays", "IA locale", "Internet"];
 S.su = S.su || { i: 0, path: "", owner: "", countries: ["FR"] };
@@ -8,15 +8,15 @@ function setupView() {
   const dots = SSTEPS.map((_, k) => `<span class="${k < i ? "d" : k === i ? "c" : ""}"></span>`).join("");
   const next = (lab = "Continuer", ok = true) => `<div class="gnav">${i > 0 && i < 4 ? `<button class="ghost" data-act="su-prev">←</button>` : "<span></span>"}<button class="cta" data-act="su-next" ${ok ? "" : "disabled"}>${lab}</button><span></span></div>`;
   let b = "";
-  if (i === 0) b = `<div style="text-align:center"><h1 style="font-size:32px">Ton dossier administratif vivant.</h1>
+  if (i === 0) b = `<div style="text-align:center"><div class="hero-dog">${IC.dog}</div><h1 style="font-size:32px">Bienvenue dans l'application, Bon toutou</h1>
     <p class="lead" style="margin:6px auto 18px">Il sait quels documents tu as, lesquels sont valables, à quoi ils servent, et exactement ce que tu as envoyé.</p>
     <div class="versus"><div class="before"><span class="h">Avant</span><s>Carte_identite.pdf</s><br><s>Carte_identite_2.pdf</s><br><s>Carte_identite_location.pdf</s><br>Carte_identite_location_FINAL_v2.pdf</div>
-      <div class="after"><span class="h">Avec Freemarket</span>2021-06-02_FR_01_Carte-identite.pdf<br><br>Une seule, toujours la bonne.<br>Réutilisée dans chaque dossier.</div></div>
-    <p class="sub">Tout reste sur ton ordinateur. Freemarket ne détruit jamais rien.</p></div>${next("Commencer")}`;
-  if (i === 1) b = `<h2>Où ranger ton dossier administratif ?</h2><p class="sub">Un seul dossier, lisible même sans Freemarket. Choisis un dossier existant ou un nouveau : Freemarket n'accède à rien d'autre sur ton ordinateur.</p>
+      <div class="after"><span class="h">Avec Bon toutou</span>2021-06-02_FR_01_Carte-identite.pdf<br><br>Une seule, toujours la bonne.<br>Réutilisée dans chaque dossier.</div></div>
+    <p class="sub">Tout reste sur ton ordinateur. Bon toutou ne détruit jamais rien.</p></div>${next("Commencer")}`;
+  if (i === 1) b = `<h2>Où ranger ton dossier administratif ?</h2><p class="sub">Un seul dossier, lisible même sans Bon toutou. Choisis un dossier existant ou un nouveau : Bon toutou n'accède à rien d'autre sur ton ordinateur.</p>
     ${window.__TAURI__ ? `<div class="acts" style="margin:14px 0"><button class="ghost" data-act="su-pick">Choisir un dossier…</button></div>` : ""}
     <input class="field" id="su_path" style="width:100%" value="${esc(u.path || st.suggest)}">
-    <p class="sub">Si le dossier contient déjà des papiers, Freemarket n'y touche pas : il ajoute seulement ses propres dossiers à côté, et ce que tu lui confies passe par Trier.</p>
+    <p class="sub">Si le dossier contient déjà des papiers, Bon toutou n'y touche pas : il ajoute seulement ses propres dossiers à côté, et ce que tu lui confies passe par Trier.</p>
     ${u.err ? `<div class="hint">${esc(u.err)}</div>` : ""}${next()}`;
   if (i === 2) b = `<h2>Comment t'appelles-tu ?</h2><p class="sub">Tu es le titulaire par défaut de tes papiers. Ton nom est ajouté au nom de tes pièces d'identité, santé, diplômes. Il reste sur ton ordinateur.</p>
     <input class="field" id="su_owner" style="width:100%" placeholder="Prénom Nom" value="${esc(u.owner)}">${next()}`;
@@ -27,7 +27,7 @@ function setupView() {
     const I = st.ia || {}, M = I.machine || {}, cat = (I.catalogue || {}).modeles || [], m = cat.find((x) => x.niveau === M.niveau && x.conseille) || cat[0] || {};
     const E = I.engines || [], integ = E.find((e) => e.id === "integre" && e.running), oll = E.find((e) => e.id === "ollama" && e.running);
     const can = (integ && m.gguf && m.gguf.sha256) || oll;
-    b = `<h2>Une IA locale pour t'aider à trier ?</h2><p class="sub">Facultatif : les règles de Freemarket suffisent pour commencer. L'IA locale aide pour les papiers inhabituels. Elle tourne sur ton ordinateur : aucun document ne sort.</p>
+    b = `<h2>Une IA locale pour t'aider à trier ?</h2><p class="sub">Facultatif : les règles de Bon toutou suffisent pour commencer. L'IA locale aide pour les papiers inhabituels. Elle tourne sur ton ordinateur : aucun document ne sort.</p>
       <div class="card box"><b>Ton ordinateur</b> : ${esc(M.puce || "")} · ${M.ram_go || "?"} Go de mémoire<br>
         <span class="pill acc">Niveau conseillé : ${({ modeste: "Modeste", equilibre: "Équilibré", puissant: "Puissant" })[M.niveau] || "?"}</span>
         <p style="margin:10px 0 0"><b>${esc(m.nom || "")}</b> · ${esc(m.auteur || "")} (${esc(m.pays || "")}) · ${esc(m.licence || "")} · ${String(m.taille_go || "").replace(".", ",")} Go</p></div>
@@ -38,9 +38,9 @@ function setupView() {
       ${can ? `<p class="sub" style="text-align:center">Le téléchargement est la seule sortie vers internet de l'installation. Il sera noté dans ton journal des sorties.</p>`
         : `<p class="sub" style="text-align:center">Aucun moteur d'IA n'est encore disponible ici : tu pourras l'installer depuis Réglages › IA locale.</p>`}`;
   }
-  if (i === 5) b = `<h2>Freemarket ne se connecte jamais à internet sauf si tu le demandes.</h2>
+  if (i === 5) b = `<h2>Bon toutou ne se connecte jamais à internet sauf si tu le demandes.</h2>
     <div class="card box"><b>Les seules exceptions possibles, toujours avec ton accord :</b>
-      <div class="row" style="padding-left:0"><span>🔄</span><div class="grow"><b>Vérifier les mises à jour</b><div class="sub">Une requête vers la page publique de Freemarket. Jamais obligatoire.</div></div></div>
+      <div class="row" style="padding-left:0"><span>🔄</span><div class="grow"><b>Vérifier les mises à jour</b><div class="sub">Une requête vers la page publique de Bon toutou. Jamais obligatoire.</div></div></div>
       <div class="row" style="padding-left:0"><span>🧠</span><div class="grow"><b>Télécharger un modèle d'IA</b><div class="sub">Seulement si tu le demandes, fichier vérifié par son empreinte.</div></div></div>
       <div class="row" style="padding-left:0"><span>☁</span><div class="grow"><b>IA externe</b><div class="sub">Désactivée. Si un jour tu l'actives : seulement pour les catégories que tu autorises, numéros masqués.</div></div></div>
       <div class="row" style="padding-left:0"><span>🐞</span><div class="grow"><b>Rapport de bug</b><div class="sub">Volontaire, relu par toi avant l'envoi, sans aucun document.</div></div></div></div>
@@ -58,8 +58,8 @@ function openExternal(url) {
 function majSection() {
   const st = S.st, m = S.maj;
   return `<div class="label">Version et mises à jour</div>
-  <div class="card box"><b>Freemarket ${esc(st.version || "")}</b> <span class="sub">· code public, licence AGPL-3.0</span>
-    <p class="sub">Les mises à jour ne sont jamais obligatoires. Vérifier envoie une seule requête à la page publique de Freemarket, notée dans le journal des sorties.</p>
+  <div class="card box"><b>Bon toutou ${esc(st.version || "")}</b> <span class="sub">· code public, licence AGPL-3.0</span>
+    <p class="sub">Les mises à jour ne sont jamais obligatoires. Vérifier envoie une seule requête à la page publique de Bon toutou, notée dans le journal des sorties.</p>
     <div class="acts"><button class="ghost small" data-act="maj-check">Vérifier les mises à jour</button>
       <label class="chk"><input type="checkbox" id="maj_auto" ${st.settings.maj_auto ? "checked" : ""}> toute seule, une fois par semaine</label></div>
     ${m ? (!m.ok ? `<div class="hint">${esc(m.msg)}</div>` : !m.nouvelle ? `<div class="hint">Tu as la dernière version (${esc(m.installee)}).</div>`
@@ -104,7 +104,7 @@ function bugModal(m) {
       const last = Date.parse(st.settings.maj_last || 0) || 0;
       if (Date.now() - last > 7 * 864e5) api("/api/maj/check", { consent: true }).then(async (r) => {
         await api("/api/settings", { maj_last: new Date().toISOString() });
-        if (r.ok && r.nouvelle) { S.maj = r; toast(`Freemarket ${r.derniere} est disponible · voir Réglages`); }
+        if (r.ok && r.nouvelle) { S.maj = r; toast(`Bon toutou ${r.derniere} est disponible · voir Réglages`); }
       });
     }
   };
@@ -144,6 +144,6 @@ document.addEventListener("click", async (e) => {
   if (act === "bug-issue") { const t = $("#bug_txt").value; await api("/api/bug/sent", { dest: "github.com (ticket public)", bytes: t.length });
     openExternal(S.modal.r.issue + "?title=" + encodeURIComponent("Problème") + "&body=" + encodeURIComponent(t)); }
   if (act === "bug-mail") { const t = $("#bug_txt").value; await api("/api/bug/sent", { dest: "ta messagerie", bytes: t.length });
-    openExternal(S.modal.r.mailto + "?subject=" + encodeURIComponent("Problème Freemarket") + "&body=" + encodeURIComponent(t)); }
+    openExternal(S.modal.r.mailto + "?subject=" + encodeURIComponent("Problème Bon toutou") + "&body=" + encodeURIComponent(t)); }
   if (act === "maj-open" && S.maj && S.maj.page) openExternal(S.maj.page);
 });

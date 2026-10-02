@@ -4,12 +4,12 @@
 import os, shutil, sys, tempfile, json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 tmp = tempfile.mkdtemp(prefix="fm_test_")
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "appareil-A")   # données locales de l'appareil A
-from freemarket.core import Bureau
-from freemarket import catalog, classify
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil-A")   # données locales de l'appareil A
+from bontoutou.core import Bureau
+from bontoutou import catalog, classify
 from tests.make_samples import SAMPLES, pdf
 
-root = os.path.join(tmp, "FREEMARKET_ADMIN"); os.makedirs(root)
+root = os.path.join(tmp, "BON_TOUTOU_ADMIN"); os.makedirs(root)
 b = Bureau(root)
 print("Outils de lecture :", b.state()["tools"])
 order = ["Carte_identite_location_FINAL_v2.pdf","avis_impot_2025_FINAL(2).pdf","scan_paie_juillet.pdf","paie_aout.pdf",
@@ -80,28 +80,28 @@ def docs_snapshot(bb):
     return sorted((d["id"], d["type"], d["status"], d["path"], d["person"], d["detail"] or "", d["suivi"] or "")
                   for d in map(dict, bb.db.execute("SELECT * FROM docs")))
 n_docs = b.db.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
-metas = os.listdir(os.path.join(root, ".freemarket", "meta", "docs"))
+metas = os.listdir(os.path.join(root, ".bontoutou", "meta", "docs"))
 check(len(metas) == n_docs, f"une fiche par document ({len(metas)})")
-check(len(os.listdir(os.path.join(root, ".freemarket", "meta", "dossiers"))) == 1, "une fiche pour le dossier")
-check(not os.path.exists(os.path.join(root, ".freemarket", "index.db")), "l'index n'est plus dans le dossier synchronisé")
-jl = os.listdir(os.path.join(root, ".freemarket", "journal"))
-check(len(jl) == 1 and sum(1 for _ in open(os.path.join(root, ".freemarket", "journal", jl[0]))) >= 8, "journal de l'appareil écrit dans le dossier")
+check(len(os.listdir(os.path.join(root, ".bontoutou", "meta", "dossiers"))) == 1, "une fiche pour le dossier")
+check(not os.path.exists(os.path.join(root, ".bontoutou", "index.db")), "l'index n'est plus dans le dossier synchronisé")
+jl = os.listdir(os.path.join(root, ".bontoutou", "journal"))
+check(len(jl) == 1 and sum(1 for _ in open(os.path.join(root, ".bontoutou", "journal", jl[0]))) >= 8, "journal de l'appareil écrit dans le dossier")
 # une précision ajoutée sur l'appareil A doit survivre à un index perdu
 rib = [d for d in b.documents() if d["type"] == "rib"][0]
 b.reclassify(rib["id"], {"detail": "RIB compte courant", "person": "Camille Martin"})
 snap_a = docs_snapshot(b)
 # appareil B : aucun index, il reconstruit tout depuis les fiches
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "appareil-B")
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil-B")
 b2 = Bureau(root)
 check(docs_snapshot(b2) == snap_a, "appareil B : index reconstruit depuis les fiches, identique (titulaire, intitulé, suivi)")
 check(len(b2.dossiers()) + len(b2.archives()["sent"]) == 1, "appareil B : le dossier envoyé est retrouvé")
-check(len(os.listdir(os.path.join(root, ".freemarket", "journal"))) == 1, "appareil B n'a encore rien écrit dans le journal")
+check(len(os.listdir(os.path.join(root, ".bontoutou", "journal"))) == 1, "appareil B n'a encore rien écrit dans le journal")
 # B corrige un document, A le voit au prochain démarrage
 cni2 = [d for d in b2.documents() if d["type"] == "carte_identite"][0]
 import time; time.sleep(1.1)
 b2.reclassify(cni2["id"], {"detail": "CNI recto-verso"})
-check(len(os.listdir(os.path.join(root, ".freemarket", "journal"))) == 2, "chaque appareil a son propre journal")
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "appareil-A")
+check(len(os.listdir(os.path.join(root, ".bontoutou", "journal"))) == 2, "chaque appareil a son propre journal")
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil-A")
 b3 = Bureau(root)
 check(b3.document(cni2["id"])["detail"] == "CNI recto-verso", "appareil A récupère la correction faite sur B")
 # fichier déplacé à la main dans le Finder : retrouvé par son empreinte
@@ -111,15 +111,15 @@ r = b3.rebuild_index()
 check(r["ok"] and b3.document(cni2["id"])["path"].endswith("deplace-a-la-main.pdf"), "fichier déplacé à la main retrouvé (empreinte)")
 check(docs_snapshot(b3) != [] and r["from_names"] == 0, "reconstruction sans doublon")
 os.rename(moved, src0); b3.rebuild_index()
-# migration d'un ancien bureau (index et réglages dans .freemarket, pas de fiches)
-old_root = os.path.join(tmp, "ANCIEN", "FREEMARKET_ADMIN"); shutil.copytree(root, old_root)
-shutil.rmtree(os.path.join(old_root, ".freemarket", "meta"))
-shutil.copy2(os.path.join(b3.local, "index.db"), os.path.join(old_root, ".freemarket", "index.db"))
+# migration d'un ancien bureau (index et réglages dans .bontoutou, pas de fiches)
+old_root = os.path.join(tmp, "ANCIEN", "BON_TOUTOU_ADMIN"); shutil.copytree(root, old_root)
+shutil.rmtree(os.path.join(old_root, ".bontoutou", "meta"))
+shutil.copy2(os.path.join(b3.local, "index.db"), os.path.join(old_root, ".bontoutou", "index.db"))
 json.dump({"owner": "Camille", "countries": ["FR", "NZ"], "use_ollama": True, "ollama_model": "x", "ai_mode": "texte"},
-          open(os.path.join(old_root, ".freemarket", "settings.json"), "w"))
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "appareil-C")
+          open(os.path.join(old_root, ".bontoutou", "settings.json"), "w"))
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil-C")
 b4 = Bureau(old_root)
-fmo = os.path.join(old_root, ".freemarket")
+fmo = os.path.join(old_root, ".bontoutou")
 check(b4.migrated and not os.path.exists(os.path.join(fmo, "index.db")) and any(f.startswith("index.db.migre-") for f in os.listdir(fmo)),
       "migration : index déplacé hors du dossier, l'ancien gardé (renommé)")
 check(len(os.listdir(os.path.join(fmo, "meta", "docs"))) == n_docs, "migration : fiches créées pour tous les documents")
@@ -138,7 +138,38 @@ check(r["type"] == "permis_bateau" and r["detail"] == "Permis bateau Cotiere", "
 check(r["emitter"] == "Kiwi-Harvest-Ltd" and any("Règle perso" in x for x in r["reasons"]), "règle perso : émetteur, origine visible dans « Pourquoi ? »")
 check(any("refusée" in w for w in catalog.WARNINGS), "règle perso trop complexe refusée")
 check(any(p["kind"] == "perso" for p in catalog.PACKS) and len([p for p in catalog.PACKS if p["kind"] == "officiel"]) == 5, "5 packs officiels + perso chargés")
-catalog.load(os.path.join(root, ".freemarket"))
+catalog.load(os.path.join(root, ".bontoutou"))
+
+# fiches de paie sans libellé « Employeur : » (comme les vraies) : employeur retrouvé, un dossier par entreprise
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil-P")
+rp = os.path.join(tmp, "BUREAU_PAIE"); os.makedirs(rp)
+bp = Bureau(rp); bp.save_settings({"owner": "Camille Martin"})
+slips = {"p1.pdf": ["BULLETIN DE PAIE", "LE PETIT BISTROT", "12 rue des Halles", "17000 LA ROCHELLE", "SIRET : 812 345 678 00012  Code APE : 5610A",
+                    "Periode du 01/08/2026 au 31/08/2026", "M. MARTIN Camille", "Salaire de base 2100,00", "Net a payer 1650,00"],
+         "p2.pdf": ["Bulletin de salaire", "SAS HOTEL DU PORT au capital de 10 000 EUR", "Quai Duperre 17000 La Rochelle", "Siret 41234567800021",
+                    "Periode du 01/09/2026 au 30/09/2026", "Salarie : Camille Martin", "Net a payer 1700,00"],
+         "p3.pdf": ["BULLETIN DE PAIE", "LE PETIT BISTROT", "12 rue des Halles", "17000 LA ROCHELLE", "SIRET : 812 345 678 00012",
+                    "Periode du 01/07/2026 au 31/07/2026", "M. MARTIN Camille", "Net a payer 1600,00"]}
+for n, L in slips.items():
+    pdf(os.path.join(src, n), L); bp.add_upload(n, open(os.path.join(src, n), "rb").read())
+P = {p["orig"]: p for p in bp.inbox()}
+check(P["p1.pdf"]["emitter"] == "Le-Petit-Bistrot" and P["p2.pdf"]["emitter"] == "Hotel-du-Port", "employeur lu dans l'en-tête des fiches de paie (sans « Employeur : »)")
+bp.validate([p["id"] for p in bp.inbox()])
+D = {d["label"]: d for d in bp.documents()}
+pb = [d for d in bp.documents() if d["emitter"] == "Le-Petit-Bistrot"]
+check(len(pb) == 1 and "/Le-Petit-Bistrot/" in pb[0]["path"].replace("\\", "/") and pb[0]["emitter_folder"] == "Le-Petit-Bistrot" and pb[0]["sub_folder"].startswith("03-2"),
+      "un sous-dossier par entreprise : 03-2_Bulletins-paie/Le-Petit-Bistrot/ (la plus récente actuelle)")
+check(len([d for d in bp.documents() if d["type"] == "bulletin_paie"]) == 2, "deux employeurs = deux fiches de paie suivies séparément")
+# déjà rangées sans émetteur (ancienne version) : « Retrouver les émetteurs »
+for d in bp.db.execute("SELECT * FROM docs WHERE type='bulletin_paie'").fetchall():
+    bp.reclassify(d["id"], {"emitter": "Inconnu"})
+check(bp.state()["unknown_emitters"] >= 2, "documents sans émetteur comptés")
+r = bp.redetect()
+cur = [d for d in bp.documents() if d["type"] == "bulletin_paie"]
+check(r["n"] == 3 and len(cur) == 2 and {d["emitter"] for d in cur} == {"Le-Petit-Bistrot", "Hotel-du-Port"}
+      and all("/" + d["emitter"] + "/" in d["path"].replace("\\", "/") for d in cur), "émetteurs retrouvés après coup : chaque employeur a sa fiche actuelle, dans son dossier")
+bp.undo(r["batch"])
+check(bp.state()["unknown_emitters"] >= 2, "« Retrouver les émetteurs » s'annule d'un coup")
 
 print("\nRÉSULTAT :", "OK" if not fails else f"{fails} échec(s)", "· bureau de test :", root)
 sys.exit(1 if fails else 0)

@@ -1,4 +1,4 @@
-// Freemarket — app de bureau. Elle lance le moteur embarqué (programme « freemarket-engine »),
+// Bon toutou — app de bureau. Elle lance le moteur embarqué (programme « bontoutou-engine »),
 // qui n'écoute que cet ordinateur (127.0.0.1, sur un port libre choisi ici), puis l'affiche dans sa fenêtre.
 // Quand l'app se ferme, le moteur s'arrête avec elle. Aucune connexion vers internet ici.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
@@ -29,7 +29,7 @@ fn main() {
             let port = free_port();
             let (_rx, child) = app
                 .shell()
-                .sidecar("freemarket-engine")?
+                .sidecar("bontoutou-engine")?
                 .args(["--port", &port.to_string(), "--app", "--watch-pid", &std::process::id().to_string()])
                 .spawn()?;
             app.manage(Engine(Mutex::new(Some(child))));
@@ -51,7 +51,7 @@ fn main() {
             Ok(())
         })
         .build(tauri::generate_context!())
-        .expect("Freemarket n'a pas pu démarrer");
+        .expect("Bon toutou n'a pas pu démarrer");
 
     app.run(|handle, event| {
         if let RunEvent::Exit = event {

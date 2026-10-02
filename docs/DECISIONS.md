@@ -1,6 +1,6 @@
-# Décisions structurelles — Freemarket V0.1 (validées le 30 sept. 2026)
+# Décisions structurelles — Bon toutou V0.1 (validées le 30 sept. 2026)
 
-1. **La vérité = le dossier Finder.** L'index SQLite (`FREEMARKET_ADMIN/.freemarket/index.db`) est reconstructible à partir des fichiers.
+1. **La vérité = le dossier Finder.** L'index SQLite (`BON_TOUTOU_ADMIN/.bontoutou/index.db`) est reconstructible à partir des fichiers.
 2. **Document suivi** (dans le modèle : *document maître*) = un papier qui sert toujours et vit dans le temps, avec une version actuelle et un historique.
    - Exemples : ta carte d'identité, ton RIB, ton dernier avis d'impôt, **la fiche de paie de ton travail actuel**, la facture EDF du logement actuel.
    - Chaque nouvelle fiche de paie devient la version actuelle ; les précédentes passent dans l'historique.
@@ -14,7 +14,7 @@
    - « Envoyer » n'existe pas encore : **Finaliser** puis **Marquer comme envoyé**.
 7. **Classement** : règles (mots-clés, émetteurs, dates) puis IA locale (Ollama, 127.0.0.1) si la confiance n'est pas élevée. L'utilisateur valide toujours avant qu'un fichier bouge.
    - Confiance affichée en mots : élevée, moyenne, à vérifier. Jamais de pourcentage. Toujours un « Pourquoi ? ».
-8. **Journal et annulation** : chaque action est notée (déplacements et changements d'index), et « Annuler » la rejoue à l'envers. La vraie sécurité : **Freemarket ne détruit rien**.
+8. **Journal et annulation** : chaque action est notée (déplacements et changements d'index), et « Annuler » la rejoue à l'envers. La vraie sécurité : **Bon toutou ne détruit rien**.
 9. **Confidentialité** : les niveaux par catégorie (🔒 Local uniquement · ◐ Sur autorisation · ☁ Externe autorisé) sont appliqués par le code, pas par l'IA.
    - Un **journal des sorties** note tout document qui quitterait l'ordinateur.
    - V0.1 : aucune sortie possible ; le serveur n'écoute que 127.0.0.1 et refuse les autres hôtes.

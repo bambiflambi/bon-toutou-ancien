@@ -2,6 +2,14 @@
 
 Les mises à jour ne sont jamais obligatoires. Une nouvelle version lit toujours les données des anciennes.
 
+## 0.4.0 — Freemarket devient Bon toutou
+- **Nouveau nom : Bon toutou**, avec une tête de chien provisoire comme icône. Au premier lancement, tout ce que Freemarket avait créé est repris en le **renommant seulement** (rien n'est supprimé) : données de l'appareil, fiches (`.freemarket` → `.bontoutou`), et le bureau `FREEMARKET_ADMIN` → `BON_TOUTOU_ADMIN` (un bureau nommé autrement garde son nom). Ce qui a été fait est noté dans `.bontoutou/migration-bon-toutou.json`.
+- **Le bouton « Ouvrir » marche dans l'app** : le document s'ouvre avec l'app habituelle de ton ordinateur (Aperçu…). Même chose pour l'aperçu dans Trier et PREUVE.txt.
+- Calendrier, export des règles, proposition : le fichier est enregistré dans ton dossier Téléchargements (l'app ne savait pas « télécharger »), puis ouvert ou montré.
+- **Fiches de paie** : l'employeur est retrouvé même sans la mention « Employeur : » (nom en haut du document au-dessus du SIRET, forme juridique SAS / SARL / Ltd…). Ton nom et celui de tes proches ne sont jamais pris pour un employeur.
+- **Un sous-dossier par entreprise** pour les fiches de paie, contrats de travail, soldes de tout compte et attestations employeur : `03-2_Bulletins-paie/Le-Petit-Bistrot/`. Chaque employeur a sa propre fiche de paie actuelle.
+- **Retrouver les émetteurs** (Documents, ou Réglages › Lecture) : pour les documents déjà rangés sans émetteur, Bon toutou relit leur texte et les range dans le bon dossier. Une seule annulation pour tout.
+
 ## 0.3.0 — l'interface de la maquette
 - Nouvelle page **Aujourd'hui** : jusqu'à 3 choses à faire (trier, compléter ou finaliser un dossier, renouveler un document), les 6 prochains mois d'échéances, les 4 raccourcis et ce qui reste sur ton ordinateur.
 - Nouveau **Calendrier** sur 12 mois : expirations lues dans tes documents et grandes échéances de tes pays (déclaration de revenus, IR3). Export **.ics** avec un rappel 30 jours avant, créé sur ton ordinateur.

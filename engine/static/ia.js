@@ -1,4 +1,4 @@
-/* Freemarket — IA locale interchangeable : la machine, les moteurs, les modèles (liste vérifiée), l'installation avec accord. */
+/* Bon toutou — IA locale interchangeable : la machine, les moteurs, les modèles (liste vérifiée), l'installation avec accord. */
 const NIV = { modeste: "Modeste", equilibre: "Équilibré", puissant: "Puissant" };
 function iaSection() {
   const st = S.st, I = st.ia || {}, M = I.machine || {}, cat = I.catalogue || { modeles: [], niveaux: {} };
@@ -34,9 +34,9 @@ function iaSection() {
       <button class="linkbtn" data-act="ia-refresh">Relancer la détection</button></dd></dl>
     <label class="chk" style="margin-top:10px"><input type="checkbox" data-act="ollama" ${st.settings.use_ollama ? "checked" : ""}> Demander un avis à l'IA locale quand la confiance n'est pas élevée</label>
     <div style="margin-top:6px">Ce qu'elle regarde : <select class="field small" id="aimode"><option value="texte" ${st.settings.ai_mode !== "vision" ? "selected" : ""}>Le texte lu seulement (rapide)</option><option value="vision" ${st.settings.ai_mode === "vision" ? "selected" : ""}>Le texte et l'image de la page (machine puissante)</option></select></div>
-    <div class="sub" style="margin-top:6px">Le moteur tourne sur ton ordinateur : aucun document ne sort. Chaque réponse de l'IA est vérifiée par Freemarket avant d'être proposée.</div></div>
+    <div class="sub" style="margin-top:6px">Le moteur tourne sur ton ordinateur : aucun document ne sort. Chaque réponse de l'IA est vérifiée par Bon toutou avant d'être proposée.</div></div>
   <div class="card" style="margin-top:8px">${levels.map((l) => { const L = cat.modeles.filter((m) => m.niveau === l); return L.length ? `<div class="subhead">${NIV[l]}${l === M.niveau ? " · conseillé pour ton ordinateur" : ""}</div>${L.map(row).join("")}` : ""; }).join("")}
-    ${others.length ? `<div class="subhead">Autres modèles installés · hors liste vérifiée</div>${others.map((o) => `<div class="row"><div class="grow"><b>${esc(o)}</b>${st.settings.ollama_model === o ? ` <span class="pill ok">utilisé</span>` : ""}<div class="sub">Installé par toi dans ${esc(eng.name)}. Freemarket ne connaît pas sa provenance.</div>${S.iatest && S.iatest.model === o ? `<div class="sub">${esc(S.iatest.msg)}</div>` : ""}</div>
+    ${others.length ? `<div class="subhead">Autres modèles installés · hors liste vérifiée</div>${others.map((o) => `<div class="row"><div class="grow"><b>${esc(o)}</b>${st.settings.ollama_model === o ? ` <span class="pill ok">utilisé</span>` : ""}<div class="sub">Installé par toi dans ${esc(eng.name)}. Bon toutou ne connaît pas sa provenance.</div>${S.iatest && S.iatest.model === o ? `<div class="sub">${esc(S.iatest.msg)}</div>` : ""}</div>
       ${st.settings.ollama_model === o ? "" : `<button class="ghost small" data-act="ia-use" data-m="${esc(o)}">Utiliser</button>`}<button class="linkbtn" data-act="ia-test" data-m="${esc(o)}">Tester</button></div>`).join("")}` : ""}
     <div class="bfoot"><span class="sub">Poids ouverts, licence Apache 2.0. Mistral AI est une entreprise française ; Qwen est développé par Alibaba (Chine). Dans les deux cas, le modèle tourne entièrement sur ton ordinateur.</span></div></div>`;
 }
@@ -44,7 +44,7 @@ function iaEngId() { const E = S.st.ia.engines || []; const s = S.st.settings.ai
 function iaConsent(m) {
   const M = S.st.ia.machine || {}, heavy = M.ram_go && m.memoire_go > M.ram_go;
   return `<h2>Installer ${esc(m.nom)} ?</h2>
-  <p>${String(m.taille_go).replace(".", ",")} Go à télécharger. ${iaEngId() === "integre" ? "Freemarket le télécharge depuis Hugging Face, puis vérifie son empreinte : un fichier modifié est refusé." : "Ollama va le télécharger depuis son registre (registry.ollama.ai) et vérifier lui-même l'empreinte de chaque fichier."}</p>
+  <p>${String(m.taille_go).replace(".", ",")} Go à télécharger. ${iaEngId() === "integre" ? "Bon toutou le télécharge depuis Hugging Face, puis vérifie son empreinte : un fichier modifié est refusé." : "Ollama va le télécharger depuis son registre (registry.ollama.ai) et vérifier lui-même l'empreinte de chaque fichier."}</p>
   <div class="hint">C'est une sortie vers internet : elle sera notée dans ton journal des sorties. <b>Aucun de tes documents n'est envoyé</b>, seul le modèle arrive.</div>
   ${heavy ? `<div class="hint" style="background:var(--warn-bg)">Ton ordinateur a ${M.ram_go} Go de mémoire : ce modèle en demande environ ${m.memoire_go}. Il risque d'être très lent.</div>` : ""}
   <div class="acts" style="margin-top:14px"><button class="cta" data-act="ia-get-ok" data-m="${esc(iaEngId() === "integre" ? m.id : m.ollama)}">Télécharger</button><button class="linkbtn" data-act="m-close">Annuler</button></div>`;

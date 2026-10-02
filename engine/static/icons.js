@@ -1,4 +1,4 @@
-/* Freemarket — icônes (traits simples, dessinées pour Freemarket). */
+/* Bon toutou — icônes (traits simples, dessinées pour Bon toutou). */
 const G=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const IC={
  inbox:G('<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/>'),
@@ -49,3 +49,4 @@ IC.book = G('<path d="M4 4h6a2 2 0 012 2v14a2 2 0 00-2-2H4zM20 4h-6a2 2 0 00-2 2
 IC.palette = G('<path d="M12 3a9 9 0 100 18c1 0 1.5-.8 1.5-1.5 0-1-.8-1.4-.8-2.3 0-1 .8-1.7 1.8-1.7H17a4 4 0 004-4c0-4.7-4-8.5-9-8.5z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/>');
 IC.calendar = G('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>');
 IC.trash = G('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>');
+IC.dog = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="170 240 684 540" aria-hidden="true"> <path d="M400 280 C260 270 180 380 200 520 C210 600 260 645 312 612 C342 592 350 520 352 440 Z" fill="#6E5416"/> <path d="M624 280 C764 270 844 380 824 520 C814 600 764 645 712 612 C682 592 674 520 672 440 Z" fill="#6E5416"/> <path d="M512 250 C640 250 720 340 720 470 C720 560 690 620 650 660 C610 700 570 760 512 760 C454 760 414 700 374 660 C334 620 304 560 304 470 C304 340 384 250 512 250 Z" fill="#FFF8EA"/> <ellipse cx="512" cy="630" rx="120" ry="95" fill="#F3E3C0"/> <circle cx="440" cy="480" r="30" fill="#2B2216"/><circle cx="584" cy="480" r="30" fill="#2B2216"/> <circle cx="450" cy="470" r="9" fill="#fff"/><circle cx="594" cy="470" r="9" fill="#fff"/> <path d="M468 585 C468 560 556 560 556 585 C556 615 530 635 512 635 C494 635 468 615 468 585 Z" fill="#2B2216"/> <path d="M512 635 L512 665 M512 665 C495 690 465 690 455 675 M512 665 C529 690 559 690 569 675" stroke="#2B2216" stroke-width="14" stroke-linecap="round" fill="none"/></svg>';

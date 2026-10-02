@@ -1,4 +1,4 @@
-/* Freemarket — Aujourd'hui, Calendrier, Contacts (aperçu). Tout vient de ton bureau, lu sur ton ordinateur. */
+/* Bon toutou — Aujourd'hui, Calendrier, Contacts (aperçu). Tout vient de ton bureau, lu sur ton ordinateur. */
 const MONTHS_LONG = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 const monthKey = (y, m) => `${y}-${String(m + 1).padStart(2, "0")}`;
 function nextMonths(n) {
@@ -47,7 +47,7 @@ function calView() {
   const evRow = (e) => `<button class="evt k-${esc(e.cc)}${e.past ? " past" : ""}" ${e.id ? `data-doc="${e.id}"` : `data-act="evnote" data-n="${esc(e.note || "")}"`}><span class="day">${+e.d.slice(8)}</span><span class="grow"><b>${esc(e.t)}</b><small>${cc(e.cc)} ${e.k}${!e.past && daysTo(e.d) <= 30 ? ` · <em class="soon">dans ${daysTo(e.d)} j</em>` : ""}</small></span></button>`;
   const ccs = [...new Set([...st.settings.countries, ...all.map((e) => e.cc)])];
   return `<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h1>Calendrier</h1><p class="lead">Les dates lues dans tes documents (expirations, renouvellements) et les grandes échéances de tes pays. Tu es prévenu à l'avance, rien d'autre.</p></div>
-    <a class="ghost" href="/api/calendrier.ics" download="freemarket-echeances.ics" style="margin-bottom:20px">${IC.calendar} Ajouter à mon calendrier (.ics)</a></div>
+    <button class="ghost" data-act="ics-dl" style="margin-bottom:20px">${IC.calendar} Ajouter à mon calendrier (.ics)</button></div>
   <div class="calleg">${ccs.map((c) => `<span>${cc(c)} ${esc(st.countries[c] || c)}</span>`).join("")}<span class="sub">· Le fichier .ics contient un rappel 30 jours avant chaque date. Il est créé ici : rien ne sort.</span></div>
   ${past.length ? `<div class="label" style="margin:0 0 8px">Déjà expiré</div><div class="card" style="margin-bottom:18px">${past.map((e) => `<button class="row rowbtn" data-doc="${e.id}">${cc(e.cc)}<div class="grow"><b>${esc(e.t)}</b><div class="sub">expiré le ${frd(e.d)} · à renouveler ou à terminer</div></div><span class="pill bad">expiré</span><span>›</span></button>`).join("")}</div>` : ""}
   <div class="calgrid">${months.map((X) => `<div class="mcard${X.es.length ? "" : " empty"}"><div class="mh"><b>${MONTHS_LONG[X.m]}</b><span class="sub">${X.y}</span></div>${X.es.map(evRow).join("") || `<div class="sub" style="padding:6px 2px">Rien</div>`}</div>`).join("")}</div>

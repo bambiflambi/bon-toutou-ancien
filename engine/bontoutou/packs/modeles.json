@@ -1,0 +1,118 @@
+{
+ "format": 1,
+ "id": "modeles",
+ "name": "Modèles d'IA",
+ "version": "1.0.0",
+ "official": true,
+ "description": "Modèles d'IA locale proposés selon la puissance de l'ordinateur. Poids ouverts, licence Apache 2.0, tournent entièrement sur la machine.",
+ "note_etape_D": "Les fichiers GGUF et leurs empreintes SHA-256 seront fixés par la chaîne de fabrication (étape D) pour le moteur intégré. Avant cela, l'installation passe par le moteur local de l'utilisateur (Ollama), qui vérifie lui-même l'empreinte de chaque fichier téléchargé.",
+ "niveaux": {
+  "modeste": {
+   "label": "Modeste",
+   "machine": "ordinateur ancien ou 8 Go de mémoire",
+   "mode": "texte"
+  },
+  "equilibre": {
+   "label": "Équilibré",
+   "machine": "ordinateur récent, 16 Go de mémoire",
+   "mode": "vision"
+  },
+  "puissant": {
+   "label": "Puissant",
+   "machine": "Mac à puce Apple avec 24 Go ou plus, ou PC avec carte graphique",
+   "mode": "vision"
+  }
+ },
+ "modeles": [
+  {
+   "id": "ministral-3-3b",
+   "nom": "Ministral 3 · 3B",
+   "auteur": "Mistral AI",
+   "pays": "France",
+   "licence": "Apache 2.0",
+   "vision": true,
+   "niveau": "modeste",
+   "conseille": true,
+   "taille_go": 3.0,
+   "memoire_go": 6,
+   "ollama": "ministral-3:3b",
+   "gguf": null,
+   "sha256": null
+  },
+  {
+   "id": "qwen3-vl-2b",
+   "nom": "Qwen3-VL · 2B",
+   "auteur": "Alibaba (Qwen)",
+   "pays": "Chine",
+   "licence": "Apache 2.0",
+   "vision": true,
+   "niveau": "modeste",
+   "conseille": false,
+   "taille_go": 1.9,
+   "memoire_go": 4,
+   "ollama": "qwen3-vl:2b",
+   "gguf": null,
+   "sha256": null
+  },
+  {
+   "id": "ministral-3-8b",
+   "nom": "Ministral 3 · 8B",
+   "auteur": "Mistral AI",
+   "pays": "France",
+   "licence": "Apache 2.0",
+   "vision": true,
+   "niveau": "equilibre",
+   "conseille": true,
+   "taille_go": 6.0,
+   "memoire_go": 12,
+   "ollama": "ministral-3:8b",
+   "gguf": null,
+   "sha256": null
+  },
+  {
+   "id": "qwen3-vl-8b",
+   "nom": "Qwen3-VL · 8B",
+   "auteur": "Alibaba (Qwen)",
+   "pays": "Chine",
+   "licence": "Apache 2.0",
+   "vision": true,
+   "niveau": "equilibre",
+   "conseille": false,
+   "taille_go": 6.1,
+   "memoire_go": 12,
+   "ollama": "qwen3-vl:8b",
+   "gguf": null,
+   "sha256": null
+  },
+  {
+   "id": "ministral-3-14b",
+   "nom": "Ministral 3 · 14B",
+   "auteur": "Mistral AI",
+   "pays": "France",
+   "licence": "Apache 2.0",
+   "vision": true,
+   "niveau": "puissant",
+   "conseille": true,
+   "taille_go": 9.1,
+   "memoire_go": 18,
+   "ollama": "ministral-3:14b",
+   "gguf": null,
+   "sha256": null
+  },
+  {
+   "id": "qwen3-vl-30b",
+   "nom": "Qwen3-VL · 30B-A3B",
+   "auteur": "Alibaba (Qwen)",
+   "pays": "Chine",
+   "licence": "Apache 2.0",
+   "vision": true,
+   "niveau": "puissant",
+   "conseille": false,
+   "taille_go": 20,
+   "memoire_go": 28,
+   "ollama": "qwen3-vl:30b-a3b-instruct",
+   "gguf": null,
+   "sha256": null
+  }
+ ]
+}

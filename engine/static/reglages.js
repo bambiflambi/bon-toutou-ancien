@@ -1,4 +1,4 @@
-/* Freemarket — Réglages, compartimentés : une liste, une page par sujet, et « Aller plus loin » (la suite de l'accueil).
+/* Bon toutou — Réglages, compartimentés : une liste, une page par sujet, et « Aller plus loin » (la suite de l'accueil).
    Les fonctions bientôt disponibles sont montrées honnêtement : rien n'est simulé. */
 const noLabel = (h) => String(h || "").replace(/^\s*<div class="label">[^<]*<\/div>/, "");
 const has = (k) => ((S.st.settings.plus_done || []).includes(k));
@@ -15,7 +15,7 @@ function plusSteps() {
   const st = S.st, s = st.settings, O = st.orgs || [];
   return [
     { id: "mail", lvl: 1, ic: "mail", t: "Choisir ton adresse admin", short: "adresse admin", s: "Une adresse rien que pour l'administratif : tes papiers arrivent au même endroit", min: 3, done: !!s.mail || has("mail"), sv: "mail" },
-    { id: "existing", lvl: 1, ic: "folder", t: "Importer tes papiers existants", short: "importer", s: "Freemarket en fait une copie dans Trier et propose un rangement : l'original ne bouge pas", min: 5, done: has("existing") || st.counts.docs >= 10, go: "trier" },
+    { id: "existing", lvl: 1, ic: "folder", t: "Importer tes papiers existants", short: "importer", s: "Bon toutou en fait une copie dans Trier et propose un rangement : l'original ne bouge pas", min: 5, done: has("existing") || st.counts.docs >= 10, go: "trier" },
     { id: "orgs", lvl: 1, ic: "building", t: "Prévenir tes organismes", short: "organismes", s: `Impôts, assurance maladie, banque… ${(s.orgs_done || []).length}/${O.length} prévenus`, min: 15, done: has("orgs") || (O.length > 0 && (s.orgs_done || []).length >= O.length), sv: "orgs" },
     { id: "cal", lvl: 1, ic: "calendar", t: "Mettre tes échéances dans ton agenda", short: "agenda", s: "Un fichier .ics avec un rappel 30 jours avant chaque date", min: 1, done: has("cal"), sv: "calendrier" },
     { id: "priv", lvl: 2, ic: "lock", t: "Régler ta confidentialité", short: "confidentialité", s: "Catégorie par catégorie : ce qui ne quitte jamais ton ordinateur", min: 2, done: has("priv"), sv: "priv" },
@@ -31,14 +31,14 @@ const REG = [
            ["calendrier", "calendar", "Calendrier", () => `${(S.st.events || []).filter((e) => !e.past).length} échéances · export .ics`],
            ["contacts", "name", "Contacts", () => "Aperçu à partir de tes documents et dossiers", "bientôt"],
            ["orgs", "building", "Organismes", () => `Checklist pour donner ta nouvelle adresse · ${(S.st.settings.orgs_done || []).length}/${(S.st.orgs || []).length}`]]],
-  ["Comment Freemarket lit tes papiers", [["ia", "sparkles", "IA locale", () => S.st.settings.use_ollama && S.st.settings.ollama_model ? `Activée · ${S.st.settings.ollama_model}` : "Facultative · tourne sur ton ordinateur"],
+  ["Comment Bon toutou lit tes papiers", [["ia", "sparkles", "IA locale", () => S.st.settings.use_ollama && S.st.settings.ollama_model ? `Activée · ${S.st.settings.ollama_model}` : "Facultative · tourne sur ton ordinateur"],
            ["lecture", "eye", "Lecture des documents", () => { const T = S.st.tools; return `PDF ${T.pypdf || T.pdftotext ? "✓" : "✗"} · scans et photos ${T.apple_vision || T.tesseract ? "✓" : "✗"}`; }],
            ["regles", "tag", "Mes règles et catalogue", () => `${((S.rules || {}).rules || []).length} ${plural(((S.rules || {}).rules || []).length, "règle")} · ${(S.st.packs || []).length} packs`]]],
   ["Sécurité et continuité", [["save", "drive", "Sauvegarde", () => "Ton dossier est fait de fichiers ordinaires", "bientôt"],
            ["cont", "heart", "Continuité", () => S.st.settings.trusted ? `Personne de confiance : ${S.st.settings.trusted}` : "Personne de confiance et accès d'urgence", "bientôt"],
            ["sync", "sync", "Synchronisation et index", () => `Cet appareil : ${(S.st.device || {}).name || ""}`],
-           ["hist", "history", "Historique des actions", () => "Tout ce que Freemarket a fait, annulable"]]],
-  ["Freemarket", [["maj", "up", "Version et mises à jour", () => `v${S.st.version || ""} · jamais obligatoires`],
+           ["hist", "history", "Historique des actions", () => "Tout ce que Bon toutou a fait, annulable"]]],
+  ["Bon toutou", [["maj", "up", "Version et mises à jour", () => `v${S.st.version || ""} · jamais obligatoires`],
            ["bug", "bug", "Signaler un problème", () => "Sans aucun document, relu par toi avant l'envoi"],
            ["accueil", "spark", "Premier tri guidé", () => (S.st.settings.guide || {}).fini ? "Terminé · le refaire" : "5 minutes avec tes propres papiers"]]]];
 
@@ -49,7 +49,7 @@ function setHead(ic, title, lead) {
 function soonCard(id, txt) {
   const on = (S.st.settings.notify || []).includes(id);
   return `<div class="card soonrow" style="border-top:1px solid var(--border-light)"><span class="pst" style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--border-light);color:var(--text-tertiary)">${IC.clock}</span>
-    <div class="grow"><b>${esc(txt)}</b> <span class="soontag">bientôt</span><div class="sub">Noté sur ton ordinateur seulement : quand une mise à jour l'apporte, Freemarket te le signale.</div></div>
+    <div class="grow"><b>${esc(txt)}</b> <span class="soontag">bientôt</span><div class="sub">Noté sur ton ordinateur seulement : quand une mise à jour l'apporte, Bon toutou te le signale.</div></div>
     <button class="ghost small${on ? " on" : ""}" data-notify="${id}">${on ? "✓ Ça m'intéresse" : "Ça m'intéresse"}</button></div>`;
 }
 
@@ -67,11 +67,11 @@ function reglagesView() {
     ${grp("Recommandé", P.filter((x) => x.lvl === 1))}${grp("Quand tu veux", P.filter((x) => x.lvl === 2))}
     <div class="label" style="margin:20px 0 8px">Bientôt disponible</div><div class="card">${SOON.map((x) => { const on = (s.notify || []).includes(x[0]);
       return `<div class="pstep soon"><span class="pst">${IC.clock}</span><div class="grow"><b>${esc(x[2])}</b><small>${esc(x[3])}</small></div><button class="ghost small${on ? " on" : ""}" data-notify="${x[0]}">${on ? "✓ Ça m'intéresse" : "Ça m'intéresse"}</button></div>`; }).join("")}</div>
-    <p class="sub" style="margin-top:10px">« Ça m'intéresse » reste sur ton ordinateur : Freemarket ne collecte rien. Les nouveautés arrivent avec les mises à jour, que tu choisis d'installer.</p>`;
+    <p class="sub" style="margin-top:10px">« Ça m'intéresse » reste sur ton ordinateur : Bon toutou ne collecte rien. Les nouveautés arrivent avec les mises à jour, que tu choisis d'installer.</p>`;
   }
   if (sv === "profil") {
     const H = S.hEdit || (S.hEdit = (s.holders || []).map((h) => Object.assign({}, h)));
-    return `${setHead("user", "Profil", "Ce que Freemarket sait de toi. Ça reste dans ton dossier, sur ton ordinateur.")}
+    return `${setHead("user", "Profil", "Ce que Bon toutou sait de toi. Ça reste dans ton dossier, sur ton ordinateur.")}
     <div class="card box"><dl class="kv"><dt>Ton nom</dt><dd><input class="field" id="owner" value="${esc(s.owner || "")}" placeholder="Prénom Nom" style="width:min(280px,100%)"><div class="sub" style="margin-top:4px">Titulaire par défaut, ajouté au nom de tes pièces d'identité, santé, diplômes.</div></dd>
       <dt>Tes pays</dt><dd>${Object.entries(st.countries).map(([k, v]) => `<label class="chk" style="display:inline-flex;margin-right:16px"><input type="checkbox" data-country="${k}" ${s.countries.includes(k) ? "checked" : ""}> ${cc(k)} ${esc(v)}</label>`).join("")}
         <div class="sub">Chaque pays a ses dossiers, ses organismes et ses échéances.</div></dd></dl></div>
@@ -84,7 +84,7 @@ function reglagesView() {
   if (sv === "priv") {
     const P = s.privacy || {}, E = st.sorties || [];
     return `${setHead("lock", "Confidentialité", "Chaque catégorie a son niveau. C'est toi qui décides, pas l'IA. Un document pas encore trié est toujours « Local uniquement ».")}
-    <div class="card egress"><span class="oi">${IC.lock}</span><div class="grow"><b>Journal des sorties</b><small>Chaque fois que Freemarket se connecte à internet (avec ton accord), c'est noté ici avant de partir : quoi, quand, vers où.</small></div><div class="egn"><b>${st.counts.egress}</b><small>${plural(st.counts.egress, "sortie")}</small></div></div>
+    <div class="card egress"><span class="oi">${IC.lock}</span><div class="grow"><b>Journal des sorties</b><small>Chaque fois que Bon toutou se connecte à internet (avec ton accord), c'est noté ici avant de partir : quoi, quand, vers où.</small></div><div class="egn"><b>${st.counts.egress}</b><small>${plural(st.counts.egress, "sortie")}</small></div></div>
     ${E.length ? `<div class="card" style="margin-bottom:16px">${E.map((e) => `<div class="row"><div class="grow"><b>${esc(e.label)}</b>${e.what ? " · " + esc(e.what) : ""}<div class="sub">${esc(e.ts.replace("T", " "))} · vers ${esc(e.dest)}</div></div></div>`).join("")}</div>` : ""}
     <div class="legend">${Object.values(LVL).map((L) => `<div class="${L[0]}"><b><span class="lvi">${LVI[L[0]]}</span>${L[1]}</b>${L[2]}</div>`).join("")}</div>
     <div class="card" style="margin-bottom:16px"><div class="switch"><span class="oi">${IC.cloud}</span><div class="grow"><b>IA externe <span class="soontag">bientôt</span></b><div class="sub">Désactivée : tout est lu sur ton ordinateur. Si elle arrive, ce sera seulement pour les catégories que tu autorises ci-dessous, numéros masqués, et avec un fournisseur sans conservation des données.</div></div><button class="tog" disabled aria-label="IA externe (bientôt)"></button></div></div>
@@ -102,16 +102,16 @@ function reglagesView() {
   if (sv === "mail") return `${setHead("mail", "Adresse admin", "Une adresse e-mail rien que pour l'administratif : impôts, banque, assurances, employeur. Tes papiers arrivent au même endroit, séparés de tes mails perso.")}
     <div class="card box"><div class="fieldwrap" style="max-width:460px"><span class="oi">${IC.mail}</span><input id="mail_in" type="email" value="${esc(s.mail || "")}" placeholder="admin@mon-domaine.fr" aria-label="Adresse admin"></div>
       <div class="acts" style="margin-top:10px"><button class="cta small" data-act="mail-save">Enregistrer</button>${s.mail ? `<button class="linkbtn" data-act="mail-clear">retirer</button>` : ""}</div>
-      <p class="sub">Elle est notée dans ton dossier, sur ton ordinateur. Freemarket ne s'y connecte pas.</p></div>
+      <p class="sub">Elle est notée dans ton dossier, sur ton ordinateur. Bon toutou ne s'y connecte pas.</p></div>
     <div class="label" style="margin:22px 0 8px">En attendant la relève automatique</div>
-    <div class="card"><div class="row"><span class="oi">${IC.up}</span><div class="grow"><b>Glisse les pièces jointes dans Trier</b><div class="sub">Depuis ta messagerie, enregistre les PDF reçus puis dépose-les : Freemarket les lit et propose un rangement.</div></div><button class="ghost small" data-go="trier">Trier</button></div>
+    <div class="card"><div class="row"><span class="oi">${IC.up}</span><div class="grow"><b>Glisse les pièces jointes dans Trier</b><div class="sub">Depuis ta messagerie, enregistre les PDF reçus puis dépose-les : Bon toutou les lit et propose un rangement.</div></div><button class="ghost small" data-go="trier">Trier</button></div>
       <div class="row"><span class="oi">${IC.building}</span><div class="grow"><b>Donne cette adresse à tes organismes</b><div class="sub">Une checklist avec les liens officiels, à ton rythme.</div></div><button class="ghost small" data-go="reglages" data-sv="orgs">Organismes</button></div></div>
     <div style="margin-top:10px">${soonCard("imap", "Relève automatique : les pièces jointes arrivent seules dans Trier")}</div>
-    <p class="sub" style="margin-top:10px">Quand elle arrivera : connexion directe de ton ordinateur à ta boîte (IMAP), mot de passe gardé dans le trousseau de ton système, rien ne passe par un serveur Freemarket.</p>`;
+    <p class="sub" style="margin-top:10px">Quand elle arrivera : connexion directe de ton ordinateur à ta boîte (IMAP), mot de passe gardé dans le trousseau de ton système, rien ne passe par un serveur Bon toutou.</p>`;
   if (sv === "calendrier") { const ev = (st.events || []).filter((e) => !e.past);
     return `${setHead("calendar", "Calendrier", "Les dates lues dans tes documents et les échéances de tes pays, dans l'agenda que tu utilises déjà.")}
     <div class="card box"><b>Ajouter à ton agenda</b><p class="sub" style="margin:4px 0 10px">Un fichier .ics avec ${ev.length} ${plural(ev.length, "échéance")} et un rappel 30 jours avant chacune. Ouvre-le : Calendrier (Mac), Google Agenda ou Outlook l'importent. Il est créé sur ton ordinateur, rien ne sort.</p>
-      <div class="acts"><a class="cta small" href="/api/calendrier.ics" download="freemarket-echeances.ics" data-act="ics-dl">${IC.calendar} Télécharger le fichier .ics</a><button class="ghost small" data-go="cal">Voir le calendrier</button></div>
+      <div class="acts"><button class="cta small" data-act="ics-dl">${IC.calendar} Ajouter à mon calendrier</button><button class="ghost small" data-go="cal">Voir le calendrier</button></div>
       <p class="sub" style="margin-bottom:0">Après un nouveau document avec une date d'expiration, télécharge-le à nouveau : les dates déjà importées ne sont pas dupliquées.</p></div>
     <div class="label" style="margin:22px 0 8px">Ce qu'il contient</div>
     <div class="card">${ev.slice(0, 8).map((e) => `<div class="row">${cc(e.cc)}<div class="grow"><b>${esc(e.t)}</b><div class="sub">${e.k} · ${frd(e.d)}${e.note ? " · " + esc(e.note) : ""}</div></div></div>`).join("") || `<div class="row sub">Aucune date pour l'instant.</div>`}${ev.length > 8 ? `<div class="row sub">… et ${ev.length - 8} autres</div>` : ""}</div>
@@ -124,14 +124,18 @@ function reglagesView() {
     <div class="card pprog" style="margin-bottom:12px"><div class="grow"><b>${D.length} sur ${O.length} prévenus</b><div class="bar ${D.length >= O.length ? "ok" : ""}"><i style="width:${O.length ? Math.round((D.length / O.length) * 100) : 0}%"></i></div></div></div>
     ${st.settings.countries.map((c) => { const L = O.filter((o) => o.cc === c); return L.length ? `<div class="label" style="margin:18px 0 8px">${cc(c)} ${esc(st.countries[c])}</div><div class="card">${L.map((o) => { const k = c + ":" + o.nom, dn = D.includes(k) || D.includes(o.nom);
       return `<label class="row orgrow${dn ? " done" : ""}" style="cursor:pointer"><input type="checkbox" data-org="${esc(k)}" ${dn ? "checked" : ""}><div class="grow"><b>${esc(o.nom)}</b><div class="sub">${esc(o.note)}</div></div>${o.url ? `<button class="ghost small" data-ext="${esc(o.url)}">Ouvrir ↗</button>` : `<span class="sub">ton espace client</span>`}</label>`; }).join("")}</div>` : ""; }).join("")}
-    <p class="sub" style="margin-top:12px">Cocher reste sur ton ordinateur. Freemarket ne se connecte pas à ces sites.</p>`; }
-  if (sv === "ia") return `${setHead("sparkles", "IA locale", "Facultative : les règles de Freemarket suffisent pour commencer. L'IA locale aide pour les papiers inhabituels, sans qu'aucun document ne sorte.")}${window.iaSection ? noLabel(iaSection()) : ""}`;
+    <p class="sub" style="margin-top:12px">Cocher reste sur ton ordinateur. Bon toutou ne se connecte pas à ces sites.</p>`; }
+  if (sv === "ia") return `${setHead("sparkles", "IA locale", "Facultative : les règles de Bon toutou suffisent pour commencer. L'IA locale aide pour les papiers inhabituels, sans qu'aucun document ne sorte.")}${window.iaSection ? noLabel(iaSection()) : ""}`;
   if (sv === "lecture") { const T = st.tools, readOk = T.pypdf || T.pdftotext;
-    return `${setHead("eye", "Lecture des documents", "Comment Freemarket lit le texte de tes papiers, sur ton ordinateur.")}
+    return `${setHead("eye", "Lecture des documents", "Comment Bon toutou lit le texte de tes papiers, sur ton ordinateur.")}
     <div class="card box"><dl class="kv"><dt>Texte des PDF</dt><dd>${readOk ? "✓ disponible" : "✗ pas encore"} ${T.pypdf ? "(pypdf)" : T.pdftotext ? "(pdftotext)" : ""}</dd><dt>Scans et photos (OCR)</dt><dd>${T.apple_vision ? "✓ lecture de texte d'Apple (intégrée à macOS)" : T.tesseract ? "✓ disponible (tesseract)" : "✗ pas encore"}</dd></dl>
-    ${!readOk || !(T.tesseract || T.apple_vision) ? `<div class="hint">Sans ces outils, Freemarket ne lit que le nom des fichiers. Pour lire le contenu, dans le Terminal :<br>
-      ${!readOk ? `<code>python3 -m pip install --user pypdf</code><br>` : ""}${!T.tesseract && !T.apple_vision ? `<code>brew install tesseract tesseract-lang poppler</code> (Homebrew : brew.sh)` : ""}</div>` : ""}</div>`; }
-  if (sv === "regles") return `${setHead("tag", "Mes règles et catalogue", "Apprends à Freemarket tes propres papiers : « si le document contient X, alors… ». Tes règles s'appliquent avant celles du catalogue.")}
+    ${!readOk || !(T.tesseract || T.apple_vision) ? `<div class="hint">Sans ces outils, Bon toutou ne lit que le nom des fichiers. Pour lire le contenu, dans le Terminal :<br>
+      ${!readOk ? `<code>python3 -m pip install --user pypdf</code><br>` : ""}${!T.tesseract && !T.apple_vision ? `<code>brew install tesseract tesseract-lang poppler</code> (Homebrew : brew.sh)` : ""}</div>` : ""}</div>
+    <div class="label" style="margin:22px 0 8px">Émetteurs</div>
+    <div class="card box"><b>${st.unknown_emitters ? `${st.unknown_emitters} ${plural(st.unknown_emitters, "document rangé")} sans émetteur` : "Tous tes documents ont un émetteur"}</b>
+      <p class="sub" style="margin:4px 0 10px">Bon toutou relit le texte de ces documents, sur ton ordinateur, pour retrouver l'émetteur, par exemple l'employeur d'une fiche de paie, puis range chaque document dans le dossier de son émetteur. Une seule annulation pour tout.</p>
+      <button class="ghost small" data-act="redetect" ${st.unknown_emitters ? "" : "disabled"}>Retrouver les émetteurs</button></div>`; }
+  if (sv === "regles") return `${setHead("tag", "Mes règles et catalogue", "Apprends à Bon toutou tes propres papiers : « si le document contient X, alors… ». Tes règles s'appliquent avant celles du catalogue.")}
     ${window.reglesSection ? noLabel(reglesSection()) : ""}
     <div class="label" style="margin:22px 0 8px">Catalogue</div>
     <div class="card">${(st.packs || []).map((p) => `<div class="row"><span class="pill ${p.kind === "officiel" ? "ok" : p.kind === "perso" ? "acc" : "warn"}">${p.kind === "officiel" ? "Officiel" : p.kind === "perso" ? "Tes règles" : "Importé"}</span><div class="grow"><b>${esc(p.name)}</b> <span class="sub">${esc(p.version || "")}</span>
@@ -150,7 +154,7 @@ function reglagesView() {
   if (sv === "sync") return `${setHead("sync", "Synchronisation et index", "")}
     <div class="card box">Tes documents et leurs fiches sont dans ton dossier : tu peux le synchroniser avec l'outil de ton choix (iCloud Drive, Syncthing, un disque…). L'index de recherche, lui, reste sur cet appareil (<b>${esc(st.device ? st.device.name : "")}</b>) et se reconstruit à partir des fiches.
       <dl class="kv" style="margin-top:12px"><dt>Ton bureau</dt><dd class="fname">${esc(st.root)}</dd><dt>Index local</dt><dd class="fname">${esc(st.local_data || "")}</dd></dl>
-      ${st.newer_data ? `<div class="hint">Certaines données viennent d'une version plus récente de Freemarket : elles sont gardées intactes.</div>` : ""}
+      ${st.newer_data ? `<div class="hint">Certaines données viennent d'une version plus récente de Bon toutou : elles sont gardées intactes.</div>` : ""}
       <div style="margin-top:12px">${S.confirm === "rebuild" ? `<button class="cta small" data-act="rebuild">Confirmer la reconstruction</button> <button class="linkbtn" data-act="noconfirm">annuler</button>` : `<button class="ghost small" data-act="askrebuild">Reconstruire l'index…</button>`}</div></div>`;
   if (sv === "hist") return `${setHead("history", "Historique des actions", "Chaque rangement, correction ou archivage. La dernière action peut être annulée.")}
     <div class="card">${(S.hist || []).map((h, i) => `<div class="row"><div class="grow"><b>${esc(h.label)}</b><div class="sub">${esc(h.ts.replace("T", " "))}${h.undone ? " · annulé" : ""}</div></div>${!h.undone && i === (S.hist || []).findIndex((x) => !x.undone) ? `<button class="ghost small" data-act="undo" data-b="${h.batch}">Annuler</button>` : ""}</div>`).join("") || `<div class="row sub">Aucune action pour l'instant.</div>`}</div>`;
@@ -158,12 +162,12 @@ function reglagesView() {
   if (sv === "bug") return `${setHead("bug", "Signaler un problème", "")}<div class="card box"><span class="sub">Prépare un rapport sans aucun document ni nom de fichier, que tu relis avant de décider de l'envoyer.</span>
     <div class="acts" style="margin-top:8px"><button class="ghost small" data-act="bug-open">Préparer un rapport</button></div></div>`;
   if (sv === "accueil") { const g = s.guide || {};
-    return `${setHead("spark", "Premier tri guidé", "5 minutes pour découvrir Freemarket avec tes propres papiers : 3 documents, ton kit de base, tes proches.")}
+    return `${setHead("spark", "Premier tri guidé", "5 minutes pour découvrir Bon toutou avec tes propres papiers : 3 documents, ton kit de base, tes proches.")}
     <div class="card box"><div class="acts"><button class="cta" data-act="g-replay">${g.fini ? "Le refaire" : g.etape ? "Reprendre" : "Commencer"}</button></div><p class="sub">Les questions déjà posées à l'installation (dossier, pays) ne sont pas reposées.</p></div>`; }
 
   // ---- liste principale
   const P = plusSteps(), pd = P.filter((x) => x.done).length;
-  return `<h1>Réglages</h1><p class="lead">Freemarket ${esc(st.version || "")} · tout est local : le moteur n'écoute que ton ordinateur.</p>
+  return `<h1>Réglages</h1><p class="lead">Bon toutou ${esc(st.version || "")} · tout est local : le moteur n'écoute que ton ordinateur.</p>
   <button class="plusbtn" data-go="reglages" data-sv="plus"><span class="oi">${IC.sparkles}</span><div class="grow"><b>Aller plus loin</b><small>La suite de ton accueil, pas à pas · ${pd} sur ${P.length} faites</small><div class="bar" style="margin-top:8px;max-width:280px"><i style="width:${Math.round((pd / P.length) * 100)}%"></i></div></div><span class="go">Continuer ›</span></button>
   ${REG.map(([t, L]) => `<div class="label setgroup">${t}</div><div class="card setlist">${L.map((r) => `<button class="rowbtn" data-go="reglages" data-sv="${r[0]}"><span class="oi">${IC[r[1]]}</span><div class="grow"><b>${r[2]}</b><small>${esc(r[3]())}</small></div>${r[4] ? `<span class="soontag">${r[4]}</span>` : ""}<span>›</span></button>`).join("")}</div>`).join("")}`;
 }
@@ -208,7 +212,9 @@ document.addEventListener("click", async (e) => {
     await api("/api/settings", { mail: v }); toast(v ? "Adresse admin enregistrée" : "Adresse retirée"); return load(); }
   if (act === "mail-clear") { await api("/api/settings", { mail: "" }); return load(); }
   if (act === "trusted-save") { await api("/api/settings", { trusted: $("#trusted").value.trim() }); toast("Enregistré"); return load(); }
-  if (act === "ics-dl") { if (!has("cal")) setTimeout(() => plusMark("cal", true), 500); return; }
+  if (act === "ics-dl") { const r = await api("/api/export", { kind: "ics" });
+    toast(r.ok ? `Fichier enregistré dans ${r.folder} : ton calendrier va proposer de l'importer` : (r.msg || "Erreur"));
+    if (r.ok && !has("cal")) await plusMark("cal", true); return; }
   if (act === "g-replay") { const g = Object.assign({}, S.st.settings.guide || {}, { fini: false, masque: false, etape: (S.st.settings.guide || {}).fini ? 0 : (S.st.settings.guide || {}).etape || 0 });
     await api("/api/settings", { guide: g }); S.st.settings.guide = g; S.gids = []; return go("guide"); }
 });

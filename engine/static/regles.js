@@ -1,4 +1,4 @@
-/* Freemarket — règles et types créés par l'utilisateur, partage, confidentialité.
+/* Bon toutou — règles et types créés par l'utilisateur, partage, confidentialité.
    Une règle : « quand un document contient <indice> → <champ> = <valeur> ». Visible, modifiable, jamais apprise en douce. */
 const CHAMPS = { emitter: "Émetteur", type: "Type", detail: "Intitulé", country: "Pays" };
 const LEVELS = [["local", "🔒 Local uniquement"], ["autorisation", "◐ Sur autorisation"], ["externe", "☁ Externe autorisé"]];
@@ -10,7 +10,7 @@ function ruleOffer(o) {
   const key = (o.inbox || o.doc) + JSON.stringify(o.overrides);
   if ((S.offerOff || new Set()).has(key) || (S.ruleMade || new Set()).has(o.inbox || o.doc)) return "";
   const show = ([k, v]) => `${CHAMPS[k]} → <b>${esc(k === "type" ? (S.st.types[v] || {}).label || v : k === "country" ? S.st.countries[v] || v : v)}</b>`;
-  return `<div class="offer"><span>Tu as corrigé ${ch.map(show).join(", ")}. <b>Faire de ta correction une règle ?</b> <span class="sub">Freemarket l'appliquera tout seul aux prochains documents.</span></span>
+  return `<div class="offer"><span>Tu as corrigé ${ch.map(show).join(", ")}. <b>Faire de ta correction une règle ?</b> <span class="sub">Bon toutou l'appliquera tout seul aux prochains documents.</span></span>
     <span class="acts">${ch.map(([k, v]) => `<button class="ghost small" data-act="r-new" data-o='${esc(JSON.stringify({ inbox: o.inbox || null, doc: o.doc || null, champ: k, valeur: v, type: o.type }))}'>Créer une règle « ${CHAMPS[k]} »</button>`).join("")}
     <button class="linkbtn" data-act="r-off" data-k='${esc(key)}'>Juste cette fois</button></span></div>`;
 }
@@ -52,7 +52,7 @@ function ruleModal(m) {
 }
 function typeModal(m) {
   const C = S.st.categories, subs = Object.entries(S.st.subs).filter(([k]) => k.startsWith((m.cat || "01") + "-"));
-  return `<h2>Nouveau type de document</h2><p class="sub">Pour un papier que Freemarket ne connaît pas encore (permis bateau, carte de club…).</p>
+  return `<h2>Nouveau type de document</h2><p class="sub">Pour un papier que Bon toutou ne connaît pas encore (permis bateau, carte de club…).</p>
   <div class="edit" style="margin-top:10px">
     <label>Nom<input id="t_label" value="${esc(m.label || "")}" placeholder="ex. Permis bateau"></label>
     <label>Catégorie<select id="t_cat">${Object.entries(C).map(([k, v]) => `<option value="${k}" ${k === (m.cat || "01") ? "selected" : ""}>${k} ${esc(v)}</option>`).join("")}</select></label>
@@ -70,7 +70,7 @@ function importModal(m) {
   return `<h2>Importer des règles</h2>
   ${!p ? `<p class="sub">Lecture…</p>` : !p.ok ? `<p style="color:var(--warn)">${esc(p.msg)}</p><button class="linkbtn" data-act="m-close">Fermer</button>`
     : `<p><b>${esc(p.name)}</b> ajoute ${p.types} type${p.types > 1 ? "s" : ""} et ${p.rules} règle${p.rules > 1 ? "s" : ""}${p.refused ? ` (${p.refused} refusée${p.refused > 1 ? "s" : ""} : invalides)` : ""}. Elles s'appliqueraient à ${p.docs} de tes documents.</p>
-      <div class="hint">⚠ Ce pack n'est pas signé par Freemarket : il vient de quelqu'un d'autre. Il ne contient que des mots et des endroits où ranger, il ne peut rien exécuter ni envoyer. Tu pourras le désactiver ou le retirer à tout moment.</div>
+      <div class="hint">⚠ Ce pack n'est pas signé par Bon toutou : il vient de quelqu'un d'autre. Il ne contient que des mots et des endroits où ranger, il ne peut rien exécuter ni envoyer. Tu pourras le désactiver ou le retirer à tout moment.</div>
       <div class="acts" style="margin-top:14px"><button class="cta" data-act="i-ok">Importer</button><button class="linkbtn" data-act="m-close">Annuler</button></div>`}`;
 }
 function proposeModal(m) {
@@ -81,7 +81,7 @@ function proposeModal(m) {
     <div class="pick">${(S.rules.rules || []).filter((r) => r.actif !== false).map((r) => `<label class="chk"><input type="checkbox" data-pr="${r.id}" ${!m.ids || m.ids.includes(r.id) ? "checked" : ""}> ${esc(r.phrase)}</label>`).join("")}
       ${(S.rules.types || []).map((t) => `<label class="chk"><input type="checkbox" data-pt="${t.id}" ${!m.tids || m.tids.includes(t.id) ? "checked" : ""}> Type : ${esc(t.label)}</label>`).join("")}</div>
     <textarea class="field mono" readonly rows="8">${esc(p.text)}</textarea>
-    <div class="acts" style="margin-top:12px">${p.mailto ? `<button class="cta" data-act="p-sent">Ouvrir ma messagerie</button>` : `<button class="cta" data-act="p-copy">Copier le texte</button><a class="ghost" style="text-decoration:none" download="proposition-freemarket.json" href="data:application/json;charset=utf-8,${encodeURIComponent(p.text)}" data-act="p-file">Enregistrer en fichier</a>`}
+    <div class="acts" style="margin-top:12px">${p.mailto ? `<button class="cta" data-act="p-sent">Ouvrir ma messagerie</button>` : `<button class="cta" data-act="p-copy">Copier le texte</button><button class="ghost" data-act="p-file">Enregistrer en fichier</button>`}
       <button class="linkbtn" data-act="m-close">Annuler</button></div>
     ${p.mailto ? "" : `<p class="sub">L'adresse de contribution n'est pas encore définie : copie le texte ou enregistre le fichier pour l'envoyer toi-même.</p>`}`}`;
 }
@@ -94,10 +94,10 @@ function reglesSection() {
       <div class="grow"><b style="${r.actif === false ? "opacity:.5" : ""}">${esc(r.phrase)}</b>${S.rtest && S.rtest.id === r.id ? `<div class="sub">${esc(S.rtest.msg)}</div>` : ""}</div>
       <select class="field small" data-rtry="${r.id}"><option value="">Essayer sur…</option>${(S.allDocsLite || []).map((d) => `<option value="${d.id}">${esc(d.label)}</option>`).join("")}</select>
       <button class="linkbtn" data-act="r-edit" data-id="${r.id}">Modifier</button><button class="linkbtn" data-act="r-del" data-id="${r.id}">Supprimer</button></div>`).join("")
-    || `<div class="row sub">Aucune règle. Quand tu corriges un document, Freemarket te proposera d'en faire une règle.</div>`}
+    || `<div class="row sub">Aucune règle. Quand tu corriges un document, Bon toutou te proposera d'en faire une règle.</div>`}
     ${R.types.map((t) => `<div class="row"><span class="pill acc">Type perso</span><div class="grow"><b>${esc(t.label)}</b><div class="sub">${esc(t.cat)} › ${esc(t.sub)} · reconnu par : ${esc((t.kw || []).join(", "))}</div></div></div>`).join("")}
     <div class="bfoot"><span class="acts"><button class="ghost small" data-act="t-new">+ Nouveau type de document</button></span>
-      <span class="acts"><a class="ghost small" style="text-decoration:none" href="/api/rules/export">Exporter</a>
+      <span class="acts"><button class="ghost small" data-act="r-export">Exporter</button>
         <label class="ghost small" style="cursor:pointer">Importer<input type="file" id="r_import" accept=".json,application/json" hidden></label>
         <button class="ghost small" data-act="p-open" ${R.rules.length || R.types.length ? "" : "disabled"}>Proposer pour une future version</button></span></div></div>
   ${R.imported.length ? `<div class="card" style="margin-top:8px">${R.imported.map((p) => `<div class="row"><span class="pill warn">Importé · non vérifié</span><div class="grow"><b>${esc(p.name)}</b> <span class="sub">${esc(p.version)} · ${p.types} type(s) · ${p.rules} règle(s)</span></div>
@@ -211,11 +211,13 @@ document.addEventListener("click", async (e) => {
     S.modal = null; await load(); return toast(`Type « ${m.label} » créé · les documents à trier ont été relus`);
   }
   if (act === "i-ok") { const r = await (await fetch("/api/rules/import?confirm=1", { method: "POST", body: S.importRaw })).json(); S.modal = null; await load(); return toast(r.ok ? "Pack importé · marqué « non vérifié »" : r.msg); }
-  if (act === "i-rm") { await api("/api/rules/remove", { file: a.dataset.f }); toast("Pack retiré · gardé dans .freemarket/packs/_retires"); return load(); }
+  if (act === "i-rm") { await api("/api/rules/remove", { file: a.dataset.f }); toast("Pack retiré · gardé dans .bontoutou/packs/_retires"); return load(); }
   if (act === "p-open") { S.modal = { kind: "propose" }; render(); S.modal.data = await api("/api/rules/propose", {}); return render(); }
   if (act === "p-copy") { try { await navigator.clipboard.writeText(m.data.text); } catch (x) { /* sélection manuelle */ }
     await api("/api/rules/proposed", { dest: "copié pour envoi manuel", what: `${m.data.pack.rules.length} règle(s), ${Object.keys(m.data.pack.types).length} type(s)`, bytes: m.data.text.length }); return toast("Copié · colle-le dans un e-mail"); }
   if (act === "p-sent" && window.openExternal) openExternal(m.data.mailto);
+  if (act === "p-file") { const r = await api("/api/export", { kind: "proposition", text: m.data.text }); toast(r.ok ? `Enregistré dans ${r.folder}` : (r.msg || "Erreur")); }
   if (act === "p-sent" || act === "p-file") { api("/api/rules/proposed", { dest: act === "p-sent" ? "ta messagerie" : "fichier enregistré", what: `${m.data.pack.rules.length} règle(s), ${Object.keys(m.data.pack.types).length} type(s)`, bytes: m.data.text.length }); }
+  if (act === "r-export") { const r = await api("/api/export", { kind: "regles" }); return toast(r.ok ? `Tes règles sont enregistrées dans ${r.folder}` : (r.msg || "Erreur")); }
   if (act === "mk") { S.mk = await api("/api/mask", { text: $("#mk_in").value }); return render(); }
 });

@@ -6,9 +6,9 @@ import json, os, sys, tempfile, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 tmp = tempfile.mkdtemp(prefix="fm_ia_")
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "appareil")
-from freemarket import ia, classify, sortie
-from freemarket.core import Bureau
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil")
+from bontoutou import ia, classify, sortie
+from bontoutou.core import Bureau
 
 fails = 0
 def check(cond, msg):
@@ -69,7 +69,7 @@ r3 = classify.refine_with_ai(dict(r, reasons=list(r["reasons"])), "", "scan.jpg"
 check(r3["type"] == "passeport" and r3["expiry"] == "2034-07-22" and any("Ollama" in x for x in r3["reasons"]), "réponse valide : appliquée, « Pourquoi ? » nomme le modèle et le moteur")
 
 # installer un modèle : accord + journal AVANT
-root = os.path.join(tmp, "FREEMARKET_ADMIN"); os.makedirs(root); b = Bureau(root)
+root = os.path.join(tmp, "BON_TOUTOU_ADMIN"); os.makedirs(root); b = Bureau(root)
 check(not b.ai_pull("ollama", "ministral-3:8b", False)["ok"], "sans ton accord : pas de téléchargement")
 check(not b.ai_pull("ollama", "modele-inconnu:1b", True)["ok"], "modèle hors de la liste vérifiée : refusé")
 r = b.ai_pull("ollama", "ministral-3:8b", True)

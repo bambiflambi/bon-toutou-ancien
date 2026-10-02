@@ -1,4 +1,4 @@
-"""Fabrique des faux documents PDF (texte réel, lisible) pour tester Freemarket.
+"""Fabrique des faux documents PDF (texte réel, lisible) pour tester Bon toutou.
 
     python3 tests/make_samples.py  /chemin/de/sortie
 Aucune dépendance : le PDF est écrit à la main.

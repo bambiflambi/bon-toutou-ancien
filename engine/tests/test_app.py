@@ -11,9 +11,9 @@ def check(cond, msg):
     print(("  ✓ " if cond else "  ✗ ") + msg); fails += 0 if cond else 1
 
 def start():
-    env = dict(os.environ, HOME=os.path.join(tmp, "home"), FREEMARKET_DATA=os.path.join(tmp, "data"))
+    env = dict(os.environ, HOME=os.path.join(tmp, "home"), BONTOUTOU_DATA=os.path.join(tmp, "data"))
     os.makedirs(env["HOME"], exist_ok=True)
-    p = subprocess.Popen([sys.executable, "-m", "freemarket.server", "--port", "0", "--app"], cwd=os.path.join(tmp, "code"),
+    p = subprocess.Popen([sys.executable, "-m", "bontoutou.server", "--port", "0", "--app"], cwd=os.path.join(tmp, "code"),
                          env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     line = p.stdout.readline().strip()
     return p, int(line.split("=")[1])
@@ -29,17 +29,17 @@ def call(port, path, body=None, raw=None):
 # copie du code SANS config.json ni kit voisin : comme une app fraîchement installée
 import shutil
 os.makedirs(os.path.join(tmp, "code"))
-for d in ("freemarket", "static"):
+for d in ("bontoutou", "static"):
     shutil.copytree(os.path.join(HERE, d), os.path.join(tmp, "code", d))
 p, port = start()
 try:
     c, st = call(port, "/api/state")
-    check(st.get("setup") and st["suggest"].endswith("FREEMARKET_ADMIN") and st["ia"]["machine"]["niveau"], "1er lancement : assistant d'installation, dossier suggéré, niveau d'IA conseillé")
+    check(st.get("setup") and st["suggest"].endswith("BON_TOUTOU_ADMIN") and st["ia"]["machine"]["niveau"], "1er lancement : assistant d'installation, dossier suggéré, niveau d'IA conseillé")
     c, r = call(port, "/api/upload?name=x.pdf", raw=b"%PDF")
     check(c == 409, "avant l'installation, rien ne peut être déposé")
     c, r = call(port, "/api/setup", {"path": os.path.join(tmp, "home"), "owner": "x"})
     check(not r["ok"], "refus d'utiliser tout le dossier personnel")
-    target = os.path.join(tmp, "home", "Documents", "FREEMARKET_ADMIN"); os.makedirs(os.path.dirname(target))
+    target = os.path.join(tmp, "home", "Documents", "BON_TOUTOU_ADMIN"); os.makedirs(os.path.dirname(target))
     c, r = call(port, "/api/setup", {"path": target, "owner": "Camille Martin", "countries": ["FR", "NZ", "ZZ"]})
     check(r["ok"] and os.path.isdir(os.path.join(target, "00_A-TRIER")), "installation : dossier créé avec 00_A-TRIER")
     c, st = call(port, "/api/state")
@@ -49,7 +49,7 @@ try:
     c, r = call(port, "/api/maj/check", {"consent": False})
     check(not r["ok"] and "accord" in r["msg"], "mises à jour : sans ton accord, aucune requête n'est envoyée")
     c, r = call(port, "/api/bug", {})
-    check(r["ok"] and "Passeport_secret" not in r["text"] and "Martin" not in r["text"] and "Freemarket" in r["text"], "rapport de bug : ni nom de fichier ni nom de personne")
+    check(r["ok"] and "Passeport_secret" not in r["text"] and "Martin" not in r["text"] and "Bon toutou" in r["text"], "rapport de bug : ni nom de fichier ni nom de personne")
     c, s = call(port, "/api/sorties")
     check(s == [], "rien n'est sorti pendant l'installation")
 finally:
@@ -79,10 +79,34 @@ try:
     check(st2["settings"]["theme"] == "sauge" and st2["settings"]["mail"] == "admin@exemple.fr" and st2["settings"]["orgs_done"] == ["Impôts"], "réglages v0.3 enregistrés (thème, adresse admin, organismes prévenus)")
 finally:
     p.terminate(); p.wait()
+# Freemarket -> Bon toutou : un Mac où Freemarket était installé, bureau FREEMARKET_ADMIN avec ses fiches .freemarket
+h2 = os.path.join(tmp, "home-ancien")
+oldh = os.path.join(h2, ".local", "share", "freemarket")
+oroot = os.path.join(h2, "Documents", "FREEMARKET_ADMIN")
+os.makedirs(os.path.join(oroot, ".freemarket")); os.makedirs(oldh)
+open(os.path.join(oroot, ".freemarket", "profil.json"), "w").write(json.dumps({"format": 1, "owner": "Camille Ancienne", "countries": ["FR"]}))
+open(os.path.join(oroot, "mon-papier.pdf"), "w").write("%PDF")
+open(os.path.join(oldh, "config.json"), "w").write(json.dumps({"format": 1, "bureau": oroot}))
+env2 = {k: v for k, v in os.environ.items() if k not in ("BONTOUTOU_DATA", "FREEMARKET_DATA", "XDG_DATA_HOME")}
+env2["HOME"] = h2
+pm = subprocess.Popen([sys.executable, "-m", "bontoutou.server", "--port", "0", "--app"], cwd=os.path.join(tmp, "code"), env=env2,
+                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+try:
+    port2 = int(pm.stdout.readline().strip().split("=")[1])
+    c, stm = call(port2, "/api/state")
+    nroot = os.path.join(h2, "Documents", "BON_TOUTOU_ADMIN")
+    check(not stm.get("setup") and stm["root"] == nroot and stm["settings"]["owner"] == "Camille Ancienne",
+          "Freemarket -> Bon toutou : bureau repris et renommé BON_TOUTOU_ADMIN, réglages gardés")
+    check(os.path.exists(os.path.join(nroot, "mon-papier.pdf")) and os.path.isdir(os.path.join(nroot, ".bontoutou"))
+          and not os.path.exists(os.path.join(nroot, ".freemarket")) and not os.path.exists(oldh)
+          and os.path.exists(os.path.join(nroot, ".bontoutou", "migration-bon-toutou.json")),
+          "renommage seulement : documents intacts, fiches .bontoutou, rien supprimé, migration notée")
+finally:
+    pm.terminate(); pm.wait()
 # l'app se ferme (même brutalement) : le moteur s'arrête aussi
 parent = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
-env = dict(os.environ, HOME=os.path.join(tmp, "home"), FREEMARKET_DATA=os.path.join(tmp, "data"))
-eng = subprocess.Popen([sys.executable, "-m", "freemarket.server", "--port", "0", "--app", "--watch-pid", str(parent.pid)],
+env = dict(os.environ, HOME=os.path.join(tmp, "home"), BONTOUTOU_DATA=os.path.join(tmp, "data"))
+eng = subprocess.Popen([sys.executable, "-m", "bontoutou.server", "--port", "0", "--app", "--watch-pid", str(parent.pid)],
                        cwd=os.path.join(tmp, "code"), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(2); alive = eng.poll() is None
 parent.kill(); parent.wait()

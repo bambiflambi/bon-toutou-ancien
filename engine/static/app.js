@@ -1,4 +1,4 @@
-/* Freemarket v0.3 — interface locale. Tout passe par le moteur sur ton ordinateur (127.0.0.1).
+/* Bon toutou v0.3 — interface locale. Tout passe par le moteur sur ton ordinateur (127.0.0.1).
    app.js : socle (état, appels, barre du haut, rendu), Trier, Documents, Dossiers, Archives.
    vues.js : Aujourd'hui, Calendrier, Contacts. reglages.js : Réglages compartimentés. */
 const S = { v: "home", sv: null, st: null, inbox: [], docs: [], dossiers: [], arch: null, doc: null, dos: null,
@@ -63,13 +63,13 @@ function go(v, extra = {}) {
 /* ------------------------------------------------ BARRE DU HAUT */
 const PLUS = [["cal", "Calendrier", "calendar"], ["archives", "Archives", "archive"], ["contacts", "Contacts", "name", "aperçu"], ["reglages", "Réglages", "gear"]];
 function topbar() {
-  const vv = $("#ver"); if (vv && S.st) vv.textContent = "Freemarket " + (S.st.version ? "v" + S.st.version : "") + " · local · code public AGPL-3.0";
+  const vv = $("#ver"); if (vv && S.st) vv.textContent = "Bon toutou " + (S.st.version ? "v" + S.st.version : "") + " · local · code public AGPL-3.0";
   const setup = S.v === "setup" || (S.st && S.st.setup);
   const c = (S.st && S.st.counts) || {};
   const on = { doc: "docs", dossier: "dossiers", guide: "trier" }[S.v] || S.v;
   const plusOn = PLUS.find((x) => x[0] === on);
   const th = (S.st && S.st.settings && S.st.settings.theme) || "champagne";
-  $("#topbar").innerHTML = `<button class="brand" ${setup ? "" : 'data-go="home"'}><span class="mark">F</span><span><b>Freemarket</b><small>Ton dossier administratif vivant</small></span></button>
+  $("#topbar").innerHTML = `<button class="brand" ${setup ? "" : 'data-go="home"'}><span class="mark">${IC.dog}</span><span><b>Bon toutou</b><small class="tagline"></small></span></button>
   ${setup ? "" : `<nav class="nav">${[["home", "Aujourd'hui"], ["trier", "Trier", c.inbox], ["docs", "Documents"], ["dossiers", "Dossiers"]].map((n) => `<button class="${on === n[0] ? "on" : ""}" data-go="${n[0]}">${n[1]}${n[2] ? ` <span class="badge">${n[2]}</span>` : ""}</button>`).join("")}
     <span class="plusw"><button class="${plusOn ? "on" : ""}" data-act="plusmenu" aria-expanded="${!!S.pm}">${plusOn ? plusOn[1] : "Plus"} <span class="caret">▾</span></button>
     ${S.pm ? `<div class="pmenu">${PLUS.map((x) => `<button data-go="${x[0]}"><span class="oi">${IC[x[2]]}</span>${x[1]}${x[3] ? ` <span class="soontag">${x[3]}</span>` : ""}</button>`).join("")}</div>` : ""}</span></nav>`}
@@ -106,7 +106,7 @@ function trier() {
   S.solo = S.solo || new Set();
   const P = S.inbox, hi = P.filter(isHi), rest = P.filter((p) => !hi.includes(p));
   const sel = hi.filter((p) => !S.unchecked || !S.unchecked.has(p.id));
-  return `<h1>Trier</h1><p class="lead">${P.length ? `${P.length} ${plural(P.length, "document")} en attente. ` : ""}Freemarket lit tes papiers sur ton ordinateur, propose un nom et une place, et tu valides. <b>Tu peux te tromper : Freemarket ne détruit rien.</b></p>
+  return `<h1>Trier</h1><p class="lead">${P.length ? `${P.length} ${plural(P.length, "document")} en attente. ` : ""}Bon toutou lit tes papiers sur ton ordinateur, propose un nom et une place, et tu valides. <b>Tu peux te tromper : Bon toutou ne détruit rien.</b></p>
   <div class="addrow">
     <span class="ghost">${IC.up} Déposer des fichiers<input type="file" id="files" multiple aria-label="Déposer des fichiers"></span>
     <span class="ghost">${IC.folder} Importer un dossier<input type="file" id="dirIn" webkitdirectory multiple aria-label="Importer un dossier"></span>
@@ -132,7 +132,7 @@ function tcard(p) {
   return `<div class="card tcard ${p.confidence}">
     <div class="tt"><span class="oi">${catIc(p.cat)}</span><b>${esc(p.label)}</b>${cc(p.country)}${p.cat ? lvBadge(p.cat) : ""}<span class="conf ${p.confidence}">${CONF[p.confidence]}</span>${p.ai_pending ? `<span class="pill acc"><span class="spin" style="width:11px;height:11px"></span> IA locale en train de lire…</span>` : ""}${reasons(p)}<span class="pill n">${esc(p.source)}</span>
       ${p.duplicate ? `<span class="pill bad">Doublon exact de « ${esc(p.duplicate.label)} »</span>` : ""}
-      <a class="linkbtn" href="/api/inboxfile?id=${p.id}" target="_blank" style="margin-left:auto">Aperçu</a></div>
+      <button class="linkbtn" data-open-inbox="${p.id}" style="margin-left:auto">Aperçu</button></div>
     <div class="edit">
       <label>Type<select class="field" data-ov="${p.id}" data-f="type">${typeOptions(p.type)}</select></label>
       <label>Pays<select class="field" data-ov="${p.id}" data-f="country">${Object.entries(S.st.countries).map(([k, v]) => `<option value="${k}" ${k === p.country ? "selected" : ""}>${k} · ${v}</option>`).join("")}</select></label>
@@ -160,17 +160,24 @@ function subBlock(D, c) {
   const subs = [...new Set(D.map((d) => d.sub_folder))].sort();
   const all = S.showEmpty ? Object.keys(S.st.subs).filter((k) => k.startsWith(c + "-")).map((k) => k + "_" + S.st.subs[k]) : [];
   return [...new Set([...subs, ...all])].sort().map((s) => { const X = D.filter((d) => d.sub_folder === s);
-    return `<div class="subhead${X.length ? "" : " empty"}">${esc(s.replace(/_/g, " ").replace(/-/g, " "))} · ${X.length || "vide"}</div>${X.map(docRow).join("")}`; }).join("");
+    const E = [...new Set(X.map((d) => d.emitter_folder || ""))].sort();
+    const rows = E.length > 1 || E[0] ? E.map((e) => { const Y = X.filter((d) => (d.emitter_folder || "") === e);
+      return (e ? `<div class="subhead" style="padding-left:34px;text-transform:none;letter-spacing:0">${IC.folder.replace("<svg", '<svg style="width:13px;height:13px;vertical-align:-2px"')} ${esc(e.replace(/-/g, " "))} · ${Y.length}</div>` : "") + Y.map(docRow).join(""); }).join("") : X.map(docRow).join("");
+    return `<div class="subhead${X.length ? "" : " empty"}">${esc(s.replace(/_/g, " ").replace(/-/g, " "))} · ${X.length || "vide"}</div>${rows}`; }).join("");
 }
 function catSec(c, D) {
   return `<div class="catsec${D.length ? "" : " empty"}"><div class="cathead"><span class="oi">${catIc(c)}</span><b>${c} ${esc(S.st.categories[c] || "")}</b>${D.length ? `<span class="n">${D.length}</span>` : `<span class="pill neutral">vide</span>`}</div><div class="doclist">${subBlock(D, c)}</div></div>`;
 }
 function docs() {
   const C = S.st.categories, q = S.q.toLowerCase(), ax = S.ax || "pays";
-  const head = `<h1>Documents</h1><p class="lead">${S.docs.length} ${plural(S.docs.length, "document suivi", "documents suivis")}. Freemarket garde la version actuelle et l'historique de chacun, et les réutilise dans tes dossiers sans copie.</p>
+  const head0 = `<h1>Documents</h1><p class="lead">${S.docs.length} ${plural(S.docs.length, "document suivi", "documents suivis")}. Bon toutou garde la version actuelle et l'historique de chacun, et les réutilise dans tes dossiers sans copie.</p>
   <div class="search">${IC.search}<input id="q" value="${esc(S.q)}" placeholder="Chercher : passeport, EDF, fiche de paie…" aria-label="Chercher"></div>
   <div class="axes">${[["pays", "Par pays"], ["cat", "Par catégorie"], ["exp", "Expirent bientôt"]].map((a) => `<button class="${ax === a[0] ? "on" : ""}" data-ax="${a[0]}">${a[1]}</button>`).join("")}
     ${ax !== "exp" && !q ? `<button class="linkbtn emptytog" data-act="showempty">${S.showEmpty ? "Masquer" : "Afficher"} les catégories vides</button>` : ""}</div>`;
+  const unk = S.docs.filter((d) => !d.emitter || d.emitter === "Inconnu").length;
+  const banner = unk ? `<div class="card box" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;border-color:var(--warning)"><span class="oi" style="background:var(--warning-light);color:var(--warning)">${IC.search}</span><div class="grow"><b>${unk} ${plural(unk, "document")} sans émetteur</b><div class="sub">Bon toutou peut relire leur texte pour retrouver l'émetteur (l'employeur des fiches de paie) et les ranger dans son dossier. Annulable.</div></div><button class="cta small" data-act="redetect">Retrouver les émetteurs</button></div>` : "";
+  const head = head0 + banner;
+  if (S.busy) return head + `<div class="card busy"><span class="spin"></span>${esc(S.busy)}</div>`;
   if (!S.docs.length) return head + `<div class="card empty">Aucun document pour l'instant. Commence par <button class="linkbtn" data-go="trier">Trier</button>.</div>`;
   if (q) { const L = S.docs.filter((d) => (d.label + d.path + d.emitter).toLowerCase().includes(q)); return head + `<div class="card doclist">${L.map(docRow).join("") || `<div class="row sub">Aucun document.</div>`}</div>`; }
   if (ax === "exp") { const L = S.docs.filter((d) => d.expiry && daysTo(d.expiry) <= 365).sort((a, b) => a.expiry.localeCompare(b.expiry));
@@ -198,7 +205,7 @@ function docView() {
   <div class="card box"><dl class="kv"><dt>Fichier</dt><dd class="fname">${esc(d.path)}</dd><dt>Date</dt><dd>${frd(d.doc_date)}</dd>
     ${d.expiry ? `<dt>Expire</dt><dd>${frd(d.expiry)} ${d.expired ? '<span class="pill bad">expiré</span>' : e <= 120 ? `<span class="pill ${e <= 30 ? "warn" : "neutral"}">dans ${e} jours</span>` : ""}</dd>` : ""}<dt>Titulaire</dt><dd>${esc(d.person === "moi" ? (S.st.settings.owner || "toi") : d.person)}</dd><dt>Émetteur</dt><dd>${esc(d.emitter)}</dd>
     <dt>Sorties</dt><dd>Jamais sorti de ton ordinateur</dd><dt>Confidentialité</dt><dd>${esc(LVL[lvOf(d.cat)][2])} · <button class="linkbtn" style="padding:0" data-go="reglages" data-sv="priv">changer</button></dd><dt>Reçu sous le nom</dt><dd class="fname">${esc(d.orig_name)}</dd></dl>
-    <div class="acts" style="margin-top:12px"><a class="ghost small" href="/api/file?p=${encodeURIComponent(d.path)}" target="_blank">Ouvrir</a><button class="ghost small" data-act="reveal" data-p="${esc(d.path)}">Montrer dans le Finder</button><button class="ghost small" data-act="fixopen">Corriger le classement</button></div>
+    <div class="acts" style="margin-top:12px"><button class="ghost small" data-open="${esc(d.path)}">Ouvrir</button><button class="ghost small" data-act="reveal" data-p="${esc(d.path)}">Montrer dans le Finder</button><button class="ghost small" data-act="fixopen">Corriger le classement</button></div>
     ${S.fix ? `<div class="edit" style="margin-top:14px">
       <label>Type<select class="field" id="fx_type">${typeOptions(d.type)}</select></label>
       <label>Pays<select class="field" id="fx_country">${Object.entries(S.st.countries).map(([k, v]) => `<option value="${k}" ${k === d.country ? "selected" : ""}>${k} · ${v}</option>`).join("")}</select></label>
@@ -210,7 +217,7 @@ function docView() {
       <div class="acts" style="margin-top:10px"><button class="cta small" data-act="fixsave">Enregistrer</button><button class="linkbtn" data-act="fixcancel">annuler</button><span class="sub">Le fichier est renommé et déplacé au bon endroit. Annulable.</span></div>` : ""}</div>
   ${S.docOffer && S.docOffer.doc === d.id && window.ruleOffer ? `<div style="margin-top:12px">${ruleOffer(S.docOffer)}</div>` : ""}
   <div class="label" style="margin:22px 0 8px">Version actuelle et historique</div>
-  <div class="card">${d.history.map((h) => `<div class="row"><span class="pill ${h.status === "actuel" ? "ok" : "neutral"}">${esc(h.status_label)}</span><div class="grow"><b>${frd(h.doc_date)}</b><div class="fname sub">${esc(h.path)}</div></div><a class="linkbtn" href="/api/file?p=${encodeURIComponent(h.path)}" target="_blank">ouvrir</a></div>`).join("")}</div>
+  <div class="card">${d.history.map((h) => `<div class="row"><span class="pill ${h.status === "actuel" ? "ok" : "neutral"}">${esc(h.status_label)}</span><div class="grow"><b>${frd(h.doc_date)}</b><div class="fname sub">${esc(h.path)}</div></div><button class="linkbtn" data-open="${esc(h.path)}">ouvrir</button></div>`).join("")}</div>
   <div class="label" style="margin:22px 0 8px">Utilisé dans</div>
   <div class="card">${d.used_in.map((u) => `<div class="row"><span class="oi">${IC.send}</span><div class="grow"><b>${esc(u.label)}</b><div class="sub">${esc(u.recipient)} · ${u.state === "envoye" ? "envoyé" : u.state === "finalise" ? "finalisé" : "en cours"}</div></div></div>`).join("") || `<div class="row sub">Pas encore utilisé.</div>`}</div>
   ${d.status === "actuel" ? `<div class="hint" style="margin-top:16px">Situation terminée (contrat fini, bail rendu, véhicule vendu) ? Toutes les versions partent dans Archives › Terminés. Rien n'est supprimé.
@@ -249,9 +256,9 @@ function dossierView() {
       ${pc.problems.length ? `<small class="sub" style="color:var(--warning)">${esc(pc.problems.join(" · "))}</small>` : ""}</div>
     ${fin ? (pc.status === "ok" ? `<span class="pill ok">Prête</span>` : "") : pieceChoice(k, pc)}</div>`).join("")}</div>
   ${fin ? `<div class="card finalbox"><span class="label">Paquet finalisé</span><b style="display:block;font-size:16px;margin:4px 0">${k.manifest.pieces.reduce((a, p) => a + p.files.length, 0)} fichiers figés pour ${esc(k.recipient)}</b>
-      <small class="sub">Freemarket n'envoie pas le mail lui-même : envoie le paquet (dossier ou ZIP), puis marque-le comme envoyé pour garder la preuve.</small>
+      <small class="sub">Bon toutou n'envoie pas le mail lui-même : envoie le paquet (dossier ou ZIP), puis marque-le comme envoyé pour garder la preuve.</small>
       <div class="fname sub" style="margin:6px 0">${esc(k.folder)}</div>
-      <div class="acts" style="margin-top:10px"><button class="ghost small" data-act="reveal" data-p="${esc(k.folder)}">${IC.folder} Ouvrir le paquet</button><a class="ghost small" href="/api/file?p=${encodeURIComponent(k.zip)}&dl=1">${IC.up} Télécharger le ZIP</a>
+      <div class="acts" style="margin-top:10px"><button class="ghost small" data-act="reveal" data-p="${esc(k.folder)}">${IC.folder} Ouvrir le paquet</button><button class="ghost small" data-act="reveal" data-p="${esc(k.zip)}">${IC.up} Montrer le ZIP</button>
       <button class="cta small" data-act="sent">✓ Marquer comme envoyé</button><button class="linkbtn" data-act="reopen">Rouvrir</button></div></div>`
     : `<div class="acts"><button class="cta" data-act="finalize" ${k.ok < k.total ? "disabled" : ""}>Finaliser le dossier</button>${k.ok < k.total ? `<span class="sub">Il manque ${k.total - k.ok} ${plural(k.total - k.ok, "pièce")}.</span>` : ""}<button class="linkbtn" data-act="abandon">Abandonner ce dossier</button></div>`}`;
 }
@@ -266,12 +273,12 @@ function archives() {
       <div>${esc(e.label)} · à <b>${esc(e.recipient)}</b> ${cc(e.country)}</div><div>le ${frd(e.sent_at.slice(0, 10))}</div>
       <p><b>Voici exactement ce qui a été transmis.</b> Ce paquet est figé : c'est ta preuve.</p>
       ${e.manifest.pieces.map((p) => `<div class="sub" style="margin-top:6px"><b style="color:var(--text)">${esc(p.label)}</b>${p.files.map((f) => `<div class="fname">version du ${frd(f.version_du)} · ${esc(f.fichier)} · SHA ${f.sha256.slice(0, 12)}…${f.remplacee_depuis ? ` <span class="pill acc">remplacée depuis par celle du ${frd(f.remplacee_depuis)}</span>` : ""}</div>`).join("")}</div>`).join("")}
-      <div class="acts" style="margin-top:10px"><button class="ghost small" data-act="reveal" data-p="${esc(e.folder)}">Ouvrir dans le Finder</button><a class="linkbtn" target="_blank" href="/api/file?p=${encodeURIComponent(e.folder + "/PREUVE.txt")}">PREUVE.txt</a></div></div>`).join("") || `<div class="card empty">${q ? "Aucun résultat." : "Aucun dossier envoyé pour l'instant."}</div>`}</div>`;
+      <div class="acts" style="margin-top:10px"><button class="ghost small" data-act="reveal" data-p="${esc(e.folder)}">Ouvrir dans le Finder</button><button class="linkbtn" data-open="${esc(e.folder + "/PREUVE.txt")}">PREUVE.txt</button></div></div>`).join("") || `<div class="card empty">${q ? "Aucun résultat." : "Aucun dossier envoyé pour l'instant."}</div>`}</div>`;
   if (S.at === "old") body = `<p class="sub" style="margin:0 0 10px">Quand un document est remplacé, l'ancien vient ici. Tu n'as qu'une version valable dans Documents, mais tu ne perds rien.</p><div class="card">${old.map((d) => `<div class="row drow k-${esc(d.country)}" data-doc="${d.id}" style="cursor:pointer"><span class="oi">${IC.archive}</span><div class="grow"><b>${esc(d.label)}</b> ${cc(d.country)}<div class="sub">version du ${frd(d.doc_date)}</div><div class="fname sub">${esc(d.path)}</div></div><span>›</span></div>`).join("") || `<div class="row sub">${q ? "Aucun résultat." : "Aucune ancienne version."}</div>`}</div>`;
   if (S.at === "done") { const g = [...new Set(done.map((d) => d.country + "|" + d.sub_folder))];
     body = `<p class="sub" style="margin:0 0 10px">Les documents d'une situation finie : bail terminé, contrat fini, véhicule vendu, visa expiré.</p>` + (g.map((k) => { const [c, f] = k.split("|"), L = done.filter((d) => d.country === c && d.sub_folder === f);
       return `<div class="card" style="margin-bottom:10px;overflow:hidden"><div class="ccband k-${esc(c)}">${cc(c)}<b>${esc(f.replace(/_/g, " "))}</b><span class="sub">${L.length}</span></div>${L.map((d) => `<div class="row drow k-${esc(d.country)}" data-doc="${d.id}" style="cursor:pointer"><span class="oi">${catIc(d.cat)}</span><div class="grow"><b>${esc(d.label)}</b><div class="sub">${frd(d.doc_date)}</div></div><span>›</span></div>`).join("")}</div>`; }).join("") || `<div class="card empty">Rien pour l'instant. Une situation finie (contrat, bail…) arrive ici.</div>`); }
-  return `<h1>Archives</h1><p class="lead">Freemarket ne détruit rien. Ce qui n'est plus valable ou déjà envoyé vit ici, dans le dossier <span class="fname">99_ARCHIVES</span> de chaque pays.</p>
+  return `<h1>Archives</h1><p class="lead">Bon toutou ne détruit rien. Ce qui n'est plus valable ou déjà envoyé vit ici, dans le dossier <span class="fname">99_ARCHIVES</span> de chaque pays.</p>
   <div class="search">${IC.search}<input id="q" value="${esc(S.q)}" placeholder="Chercher dans les archives : ancien RIB, bail, avis d'impôt 2024…" aria-label="Chercher dans les archives"></div>
   <div class="axes">${[["sent", "Dossiers envoyés", sent.length], ["old", "Anciennes versions", old.length], ["done", "Terminés", done.length]].map((t) => `<button class="${S.at === t[0] ? "on" : ""}" data-at="${t[0]}">${t[1]} <span class="sub" style="color:inherit;opacity:.75">${t[2]}</span></button>`).join("")}</div>${body}`;
 }
@@ -333,6 +340,8 @@ document.addEventListener("click", async (e) => {
   const t = e.target;
   if (S.pm && !t.closest(".plusw")) { S.pm = false; topbar(); }
   if (S.tm && !t.closest(".theme-menu,[data-act=thememenu]")) { S.tm = false; topbar(); }
+  const op = t.closest("[data-open],[data-open-inbox]");
+  if (op) { const r = await api("/api/open", op.dataset.openInbox ? { inbox: op.dataset.openInbox } : { p: op.dataset.open }); if (!r.ok) toast(r.msg || "Impossible d'ouvrir ce fichier"); return; }
   const g = t.closest("[data-go]"); if (g) return go(g.dataset.go, g.dataset.sv ? { sv: g.dataset.sv } : {});
   const dc = t.closest("[data-doc]"); if (dc) return go("doc", { docId: dc.dataset.doc });
   const ds = t.closest("[data-dos]"); if (ds) { S.allDocs = null; return openDos(ds.dataset.dos); }
@@ -347,7 +356,7 @@ document.addEventListener("click", async (e) => {
   if (act === "plusmenu") { S.pm = !S.pm; S.tm = false; return topbar(); }
   if (act === "thememenu") { S.tm = !S.tm; S.pm = false; return topbar(); }
   if (act === "showempty") { S.showEmpty = !S.showEmpty; return render(); }
-  if (act === "sitsoon") return toast("Bientôt : tu décris la situation, Freemarket propose la liste des pièces");
+  if (act === "sitsoon") return toast("Bientôt : tu décris la situation, Bon toutou propose la liste des pièces");
   if (act === "notpl") { S.newTpl = null; return render(); }
   if (act === "scan") { S.busy = "Lecture du dossier 00_A-TRIER…"; render(); const r = await api("/api/scan", {}); S.busy = ""; await load(); toast(`${r.added} ${plural(r.added, "nouveau", "nouveaux")} ${plural(r.added, "fichier")} ${plural(r.added, "trouvé")}`); }
   if (act === "reanalyze") { S.busy = "Nouvelle analyse des documents à trier…"; render(); const r = await api("/api/reanalyze", {}); S.busy = ""; await load(); toast(`${r.n} ${plural(r.n, "document")} ${plural(r.n, "relu")}`); }
@@ -358,7 +367,9 @@ document.addEventListener("click", async (e) => {
   if (act === "ok") { const r = await api("/api/validate", { ids: [a.dataset.id] }); await load(); if (r.ok) toast("Rangé", r.batch); }
   if (act === "ignore") { const r = await api("/api/ignore", { id: a.dataset.id }); await load(); toast("Ignoré · gardé dans 00_A-TRIER/_IGNORES", r.batch); }
   if (act === "undo") { const r = await api("/api/undo", { batch: a.dataset.b }); $("#toast").hidden = true; await load(); toast(r.msg); }
-  if (act === "reveal") api("/api/reveal", { p: a.dataset.p });
+  if (act === "reveal") { const r = await api("/api/reveal", { p: a.dataset.p }); if (!r.ok) toast(r.msg || "Impossible d'ouvrir le dossier"); }
+  if (act === "redetect") { S.busy = "Relecture des documents sans émetteur…"; render(); const r = await api("/api/redetect", {}); S.busy = ""; await load();
+    toast(r.n ? `Émetteur retrouvé pour ${r.n} ${plural(r.n, "document")} · rangés dans leur dossier` : "Aucun émetteur retrouvé : corrige-les un par un avec « Corriger le classement »", r.batch); }
   if (act === "askterm") { S.confirm = "term"; render(); }
   if (act === "askrebuild") { S.confirm = "rebuild"; render(); }
   if (act === "noconfirm") { S.confirm = null; render(); }
@@ -373,7 +384,7 @@ document.addEventListener("click", async (e) => {
   if (act === "newdos") { const r = await api("/api/dossier/create", { template: S.newTpl, recipient: $("#rcp").value, country: $("#dcc").value }); S.newTpl = null; openDos(r.id); }
   if (act === "finalize") { const r = await api("/api/dossier/finalize", { id: S.dos.id }); if (!r.ok) return toast(r.msg); S.dos = r.dossier; await load(); toast("Paquet généré · envoie-le puis marque-le comme envoyé"); }
   if (act === "sent") { await api("/api/dossier/sent", { id: S.dos.id }); S.at = "sent"; go("archives"); toast("Marqué comme envoyé · la preuve est dans Archives"); }
-  if (act === "reopen") { await api("/api/dossier/reopen", { id: S.dos.id }); await load(); toast("Dossier rouvert · l'ancien paquet est gardé dans .freemarket/corbeille"); }
+  if (act === "reopen") { await api("/api/dossier/reopen", { id: S.dos.id }); await load(); toast("Dossier rouvert · l'ancien paquet est gardé dans .bontoutou/corbeille"); }
   if (act === "abandon") { await api("/api/dossier/abandon", { id: S.dos.id }); go("dossiers"); }
   if (act === "ollama") { await api("/api/settings", { use_ollama: a.checked }); load(); }
 });

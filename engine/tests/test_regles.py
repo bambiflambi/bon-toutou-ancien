@@ -4,9 +4,9 @@
 import os, sys, tempfile, json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 tmp = tempfile.mkdtemp(prefix="fm_regles_")
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "appareil")
-from freemarket.core import Bureau
-from freemarket.sortie import mask
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "appareil")
+from bontoutou.core import Bureau
+from bontoutou.sortie import mask
 from tests.make_samples import SAMPLES, pdf
 
 fails = 0
@@ -14,7 +14,7 @@ def check(cond, msg):
     global fails
     print(("  ✓ " if cond else "  ✗ ") + msg); fails += 0 if cond else 1
 
-root = os.path.join(tmp, "FREEMARKET_ADMIN"); os.makedirs(root)
+root = os.path.join(tmp, "BON_TOUTOU_ADMIN"); os.makedirs(root)
 src = os.path.join(tmp, "src"); os.makedirs(src)
 for n in SAMPLES: pdf(os.path.join(src, n), SAMPLES[n])
 b = Bureau(root); b.save_settings({"owner": "Camille Martin"})
@@ -29,7 +29,7 @@ pv = R.preview(rule)
 check(pv["ok"] and len(pv["docs"]) == 3, f"aperçu : la règle changerait 3 documents rangés ({len(pv['docs'])})")
 check(pv["phrase"].startswith("Quand un document contient « Nuances Gourmandes » → Émetteur"), "la règle s'écrit en clair")
 r = R.save(rule); rid = r["rule"]["id"]
-check(r["ok"] and os.path.exists(os.path.join(root, ".freemarket", "mes-regles.json")), "règle enregistrée dans mes-regles.json")
+check(r["ok"] and os.path.exists(os.path.join(root, ".bontoutou", "mes-regles.json")), "règle enregistrée dans mes-regles.json")
 ap = R.apply(rid, [d["id"] for d in pv["docs"]])
 paie = [d for d in b.documents() if d["type"] == "bulletin_paie"][0]
 check(ap["ok"] and ap["n"] == 3 and paie["emitter"] == "Nuances-Gourmandes-Lyon" and "Nuances-Gourmandes-Lyon" in paie["path"], "appliquée : fichiers renommés")
@@ -65,8 +65,8 @@ pr = R.propose()
 check(any("ton nom" in f for f in pr["flags"]), "proposition : ton nom est signalé avant le partage")
 check(pr["mailto"] is None and json.loads(pr["text"])["rules"], "pas d'adresse de contribution : texte prêt à copier")
 pack = R.export()
-os.environ["FREEMARKET_DATA"] = os.path.join(tmp, "autre-appareil")
-root2 = os.path.join(tmp, "AUTRE", "FREEMARKET_ADMIN"); os.makedirs(root2)
+os.environ["BONTOUTOU_DATA"] = os.path.join(tmp, "autre-appareil")
+root2 = os.path.join(tmp, "AUTRE", "BON_TOUTOU_ADMIN"); os.makedirs(root2)
 b2 = Bureau(root2)
 b2.add_upload("paie_aout.pdf", open(os.path.join(src, "paie_aout.pdf"), "rb").read())
 b2.validate([x["id"] for x in b2.inbox()])
@@ -75,7 +75,7 @@ check(pv2["ok"] and pv2["rules"] == 3 and pv2["types"] == 1 and pv2["docs"] == 1
 b2.regles.import_pack(json.dumps(pack), confirm=True)
 check(any(p["kind"] == "importe" for p in b2.state()["packs"]), "pack importé chargé, marqué « non vérifié »")
 rm = b2.regles.remove_pack(b2.regles.state()["imported"][0]["file"])
-check(rm["ok"] and os.path.isdir(os.path.join(root2, ".freemarket", "packs", "_retires")), "pack retiré : gardé dans packs/_retires")
+check(rm["ok"] and os.path.isdir(os.path.join(root2, ".bontoutou", "packs", "_retires")), "pack retiré : gardé dans packs/_retires")
 check(b2.regles.import_pack('{"rules":[{"indice":"x","champ":"emitter","valeur":"y"}]}')["rules"] == 0, "règle trop courte refusée à l'import")
 # 7. Masquage avant toute sortie
 m, f = mask("IBAN FR76 3000 2012 3400 0012 3456 789 · tél 06 12 34 56 78 · pm@exemple.fr · net 1 684,20")

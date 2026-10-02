@@ -1,11 +1,11 @@
-/* Freemarket — premier tri guidé (facultatif, depuis Trier). 7 écrans, chacun peut être passé ; on reprend où on s'est arrêté.
+/* Bon toutou — premier tri guidé (facultatif, depuis Trier). 7 écrans, chacun peut être passé ; on reprend où on s'est arrêté.
    Les questions déjà posées à l'installation (pays, emplacement du bureau, confidentialité) ne sont pas reposées. */
 const GSTEPS = ["Trois documents", "Résultat", "Réutiliser", "Tes proches", "Papiers existants", "Kit de base", "C'est prêt"];
 
 function guideCard() {
   const g = S.st.settings.guide || {};
   if (g.fini || g.masque) return "";
-  return `<div class="card box gcard"><div class="grow"><b>Premier tri guidé · 5 minutes</b><div class="sub">Donne 3 papiers à Freemarket et découvre ce qu'il en fait, puis prépare ton kit de base.${g.etape ? ` Tu t'étais arrêté à « ${GSTEPS[g.etape] || ""} ».` : ""}</div></div>
+  return `<div class="card box gcard"><div class="grow"><b>Premier tri guidé · 5 minutes</b><div class="sub">Donne 3 papiers à Bon toutou et découvre ce qu'il en fait, puis prépare ton kit de base.${g.etape ? ` Tu t'étais arrêté à « ${GSTEPS[g.etape] || ""} ».` : ""}</div></div>
     <span class="acts"><button class="cta small" data-act="g-start">${g.etape ? "Reprendre" : "Commencer"}</button><button class="linkbtn" data-act="g-hide">Je me débrouille</button></span></div>`;
 }
 async function gSave(patch) {
@@ -24,11 +24,11 @@ function guideView() {
     body = `<h2>Donne-moi 3 documents.</h2><p class="sub">Par exemple un avis d'impôt, une facture, une pièce d'identité. Ils sont lus sur ton ordinateur et copiés dans 00_A-TRIER : l'original ne bouge pas.</p>
       <div class="slots">${[0, 1, 2].map((k) => ids[k] ? `<div class="slot done"><b>✓ Reçu</b><small>${esc(ids[k].name)}</small></div>`
         : `<label class="slot"><input type="file" data-gslot="${k}" hidden><b>Document ${k + 1}</b><small>${S.gbusy === k ? "Lecture…" : "Touche pour choisir"}</small></label>`).join("")}</div>
-      ${nav(ids.length ? `Voir ce que Freemarket en fait (${ids.length})` : "Continuer", ids.length > 0)}`;
+      ${nav(ids.length ? `Voir ce que Bon toutou en fait (${ids.length})` : "Continuer", ids.length > 0)}`;
   }
   if (i === 1) {
     const ids = (S.gids || []).map((x) => x.id), P = (S.inbox || []).filter((p) => ids.includes(p.id));
-    body = `<h2>Voilà ce que Freemarket en fait.</h2><p class="sub">Un nom clair, une seule place. Tu n'as plus qu'à valider. Si une proposition est fausse, corrige-la dans Trier.</p>
+    body = `<h2>Voilà ce que Bon toutou en fait.</h2><p class="sub">Un nom clair, une seule place. Tu n'as plus qu'à valider. Si une proposition est fausse, corrige-la dans Trier.</p>
       ${P.map((p) => `<div class="card box" style="margin-bottom:8px"><b>${esc(p.label)}</b> ${cc(p.country)} <span class="conf ${p.confidence}">${CONF[p.confidence]}</span>
         <div class="fname sub" style="text-decoration:line-through">${esc(p.orig)}</div><div class="fname"><b>${esc(p.name)}</b></div><div class="sub">→ ${esc(p.dest)}</div></div>`).join("")
         || (S.gdone ? `<div class="hint">Rangés ✓ Une seule version, au bon endroit.</div>` : `<p class="sub">Aucun document en attente.</p>`)}
@@ -36,7 +36,7 @@ function guideView() {
       ${nav("Continuer", true, false)}`;
   }
   if (i === 2) {
-    body = `<h2>Ce que Freemarket sait déjà réutiliser.</h2><p class="sub">Tes documents peuvent servir dans n'importe quel dossier, sans copie. Un exemple : ${esc(G.reuse.label.toLowerCase())}.</p>
+    body = `<h2>Ce que Bon toutou sait déjà réutiliser.</h2><p class="sub">Tes documents peuvent servir dans n'importe quel dossier, sans copie. Un exemple : ${esc(G.reuse.label.toLowerCase())}.</p>
       <div class="card">${G.reuse.pieces.map((p) => `<div class="piece"><span class="st ${p.have ? "ok" : "missing"}">${p.have ? "✓" : "–"}</span><div class="grow"><b>${esc(p.label)}</b><div class="sub">${p.have ? "trouvé : " + esc(p.have) : "à ajouter plus tard"}</div></div></div>`).join("")}</div>
       ${nav()}`;
   }
@@ -50,7 +50,7 @@ function guideView() {
       ${nav()}`;
   }
   if (i === 4) {
-    body = `<h2>Tu as déjà des papiers quelque part ?</h2><p class="sub">Choisis un dossier : Freemarket en fait une copie dans Trier pour te proposer un rangement. Ton dossier d'origine reste intact.</p>
+    body = `<h2>Tu as déjà des papiers quelque part ?</h2><p class="sub">Choisis un dossier : Bon toutou en fait une copie dans Trier pour te proposer un rangement. Ton dossier d'origine reste intact.</p>
       <div class="acts" style="justify-content:center"><label class="ghost" style="cursor:pointer">Choisir un dossier<input type="file" id="g_dir" webkitdirectory multiple hidden></label></div>
       ${S.gdir ? `<div class="hint">${S.gdir}</div>` : ""}
       ${nav()}`;

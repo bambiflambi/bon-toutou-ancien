@@ -1,7 +1,7 @@
 """Fixe les empreintes SHA-256 des modèles d'IA (fichiers GGUF) pour le moteur intégré.
 
 Lancé par la fabrication automatique (GitHub Actions), jamais par l'app :
-    python3 tools/pin_models.py engine/freemarket/packs/modeles.json
+    python3 tools/pin_models.py engine/bontoutou/packs/modeles.json
 
 Pour chaque modèle de la liste, on lit sur Hugging Face le dépôt officiel et le fichier voulu (quantification Q4_K_M
 de préférence), puis on écrit dans la liste : adresse exacte (révision figée) + empreinte SHA-256 + nom du fichier.
@@ -13,7 +13,7 @@ import re
 import sys
 import urllib.request
 
-SOURCES = {  # identifiant Freemarket -> (dépôt Hugging Face, motif du fichier)
+SOURCES = {  # identifiant Bon toutou -> (dépôt Hugging Face, motif du fichier)
     "ministral-3-3b": ("mistralai/Ministral-3-3B-Instruct-2512-GGUF", r"Q4_K_M\.gguf$"),
     "ministral-3-8b": ("mistralai/Ministral-3-8B-Instruct-2512-GGUF", r"Q4_K_M\.gguf$"),
     "ministral-3-14b": ("mistralai/Ministral-3-14B-Instruct-2512-GGUF", r"Q4_K_M\.gguf$"),
@@ -24,7 +24,7 @@ SOURCES = {  # identifiant Freemarket -> (dépôt Hugging Face, motif du fichier
 
 
 def get(url):
-    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "freemarket-build"}), timeout=60) as r:
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "bontoutou-build"}), timeout=60) as r:
         return json.loads(r.read())
 
 
@@ -58,4 +58,4 @@ def main(path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "engine/freemarket/packs/modeles.json")
+    main(sys.argv[1] if len(sys.argv) > 1 else "engine/bontoutou/packs/modeles.json")
