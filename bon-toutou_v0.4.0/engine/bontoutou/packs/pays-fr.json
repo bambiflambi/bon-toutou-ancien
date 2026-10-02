@@ -1,0 +1,510 @@
+{
+ "format": 1,
+ "id": "pays-fr",
+ "name": "Pays : France",
+ "version": "1.0.0",
+ "official": true,
+ "description": "Organismes, types et indices propres à la France",
+ "countries": {
+  "FR": {
+   "name": "France",
+   "folder": "FR_FRANCE"
+  }
+ },
+ "country_hints": {
+  "FR": [
+   "republique francaise",
+   "dgfip",
+   "impots.gouv",
+   "urssaf",
+   "caf.fr",
+   "ameli",
+   "cpam",
+   "siret",
+   "prefecture",
+   "france",
+   " eur",
+   "€",
+   "iban fr",
+   "fr76",
+   "securite sociale",
+   "net a payer"
+  ]
+ },
+ "emitters": [
+  [
+   "dgfip",
+   "DGFiP",
+   "FR"
+  ],
+  [
+   "impots.gouv",
+   "DGFiP",
+   "FR"
+  ],
+  [
+   "finances publiques",
+   "DGFiP",
+   "FR"
+  ],
+  [
+   "edf",
+   "EDF",
+   "FR"
+  ],
+  [
+   "engie",
+   "Engie",
+   "FR"
+  ],
+  [
+   "totalenergies",
+   "TotalEnergies",
+   "FR"
+  ],
+  [
+   "free mobile",
+   "Free",
+   "FR"
+  ],
+  [
+   "freebox",
+   "Free",
+   "FR"
+  ],
+  [
+   "orange.fr",
+   "Orange",
+   "FR"
+  ],
+  [
+   "orange sa",
+   "Orange",
+   "FR"
+  ],
+  [
+   "orange france",
+   "Orange",
+   "FR"
+  ],
+  [
+   "sfr",
+   "SFR",
+   "FR"
+  ],
+  [
+   "bouygues",
+   "Bouygues",
+   "FR"
+  ],
+  [
+   "veolia",
+   "Veolia",
+   "FR"
+  ],
+  [
+   "suez",
+   "Suez",
+   "FR"
+  ],
+  [
+   "ameli",
+   "CPAM",
+   "FR"
+  ],
+  [
+   "cpam",
+   "CPAM",
+   "FR"
+  ],
+  [
+   "caf.fr",
+   "CAF",
+   "FR"
+  ],
+  [
+   "allocations familiales",
+   "CAF",
+   "FR"
+  ],
+  [
+   "france travail",
+   "France-Travail",
+   "FR"
+  ],
+  [
+   "pole emploi",
+   "France-Travail",
+   "FR"
+  ],
+  [
+   "urssaf",
+   "URSSAF",
+   "FR"
+  ],
+  [
+   "lcl",
+   "LCL",
+   "FR"
+  ],
+  [
+   "credit lyonnais",
+   "LCL",
+   "FR"
+  ],
+  [
+   "bnp",
+   "BNP-Paribas",
+   "FR"
+  ],
+  [
+   "societe generale",
+   "Societe-Generale",
+   "FR"
+  ],
+  [
+   "credit agricole",
+   "Credit-Agricole",
+   "FR"
+  ],
+  [
+   "banque populaire",
+   "Banque-Populaire",
+   "FR"
+  ],
+  [
+   "caisse d'epargne",
+   "Caisse-Epargne",
+   "FR"
+  ],
+  [
+   "banque postale",
+   "Banque-Postale",
+   "FR"
+  ],
+  [
+   "boursorama",
+   "Boursorama",
+   "FR"
+  ],
+  [
+   "credit mutuel",
+   "Credit-Mutuel",
+   "FR"
+  ],
+  [
+   "maif",
+   "MAIF",
+   "FR"
+  ],
+  [
+   "macif",
+   "MACIF",
+   "FR"
+  ],
+  [
+   "maaf",
+   "MAAF",
+   "FR"
+  ],
+  [
+   "axa",
+   "AXA",
+   "FR"
+  ],
+  [
+   "allianz",
+   "Allianz",
+   "FR"
+  ],
+  [
+   "groupama",
+   "Groupama",
+   "FR"
+  ],
+  [
+   "ants",
+   "ANTS",
+   "FR"
+  ],
+  [
+   "prefecture",
+   "Prefecture",
+   "FR"
+  ]
+ ],
+ "types": {
+  "solde_tout_compte": {
+   "label": "Solde de tout compte",
+   "slug": "Solde-tout-compte",
+   "cat": "03",
+   "sub": "03-2",
+   "suivi": "emitter",
+   "ends": "bulletin_paie",
+   "archive": true,
+   "kw": [
+    "solde de tout compte",
+    "recu pour solde",
+    "final pay"
+   ],
+   "fn": [
+    "solde"
+   ],
+   "par_emetteur": true
+  },
+  "attestation_employeur": {
+   "label": "Attestation employeur / chômage",
+   "slug": "Attestation-employeur",
+   "cat": "03",
+   "sub": "03-4",
+   "suivi": "emitter",
+   "kw": [
+    "attestation employeur",
+    "france travail",
+    "pole emploi",
+    "allocation de retour"
+   ],
+   "fn": [
+    "attestation employeur",
+    "pole emploi",
+    "france travail"
+   ],
+   "details": [
+    [
+     "attestation (employeur )?destinee a (france travail|pole emploi)",
+     "Attestation France Travail"
+    ]
+   ],
+   "par_emetteur": true
+  },
+  "avis_impot": {
+   "label": "Avis d'impôt",
+   "slug": "Avis-imposition",
+   "cat": "04",
+   "sub": "04-2",
+   "suivi": "type",
+   "period": "year",
+   "countries": [
+    "FR"
+   ],
+   "must": [
+    "avis d'impot",
+    "avis d'imposition"
+   ],
+   "kw": [
+    "avis d'impot",
+    "avis d'imposition",
+    "impot sur le revenu",
+    "revenu fiscal de reference",
+    "dgfip"
+   ],
+   "fn": [
+    "avis",
+    "impot"
+   ]
+  },
+  "declaration_revenus": {
+   "label": "Déclaration de revenus",
+   "slug": "Declaration-revenus",
+   "cat": "04",
+   "sub": "04-1",
+   "suivi": "type",
+   "period": "year",
+   "kw": [
+    "declaration des revenus",
+    "declaration de revenus",
+    "2042",
+    "ir3",
+    "tax return"
+   ],
+   "fn": [
+    "declaration",
+    "ir3"
+   ]
+  },
+  "attestation_secu": {
+   "label": "Attestation de droits / mutuelle",
+   "slug": "Attestation-droits",
+   "cat": "06",
+   "sub": "06-1",
+   "suivi": "emitter",
+   "kw": [
+    "attestation de droits",
+    "carte vitale",
+    "complementaire sante",
+    "mutuelle",
+    "assurance maladie"
+   ],
+   "fn": [
+    "ameli",
+    "mutuelle",
+    "droits"
+   ],
+   "details": [
+    [
+     "carte vitale",
+     "Carte Vitale"
+    ],
+    [
+     "attestation de droits",
+     "Attestation de droits"
+    ],
+    [
+     "complementaire sante solidaire",
+     "CSS"
+    ]
+   ]
+  },
+  "assr": {
+   "label": "ASSR / ASR (sécurité routière)",
+   "slug": "ASSR",
+   "cat": "12",
+   "sub": "12-2",
+   "suivi": "none",
+   "kw": [
+    "assr",
+    "attestation scolaire de securite routiere",
+    "securite routiere",
+    "asr"
+   ],
+   "fn": [
+    "assr",
+    "asr"
+   ],
+   "details": [
+    [
+     "\\bassr\\s*-?\\s*([12])\\b",
+     "ASSR{1}"
+    ],
+    [
+     "(?:niveau|niv\\.?)\\s*([12])\\b",
+     "ASSR{1}"
+    ],
+    [
+     "\\b(1er|premier|1ere?)\\s+niveau",
+     "ASSR1"
+    ],
+    [
+     "\\b(2e|2eme|second|deuxieme)\\s+niveau",
+     "ASSR2"
+    ],
+    [
+     "\\battestation de securite routiere\\b|\\basr\\b",
+     "ASR"
+    ]
+   ]
+  },
+  "allocation_caf": {
+   "label": "Attestation CAF / allocation",
+   "slug": "Allocation",
+   "cat": "14",
+   "sub": "14-1",
+   "suivi": "emitter",
+   "kw": [
+    "caisse d'allocations familiales",
+    "attestation de paiement",
+    "prime d'activite",
+    "allocation logement"
+   ],
+   "fn": [
+    "caf"
+   ]
+  },
+  "aide_juridictionnelle": {
+   "label": "Aide juridictionnelle",
+   "slug": "Aide-juridictionnelle",
+   "cat": "13",
+   "sub": "13-1",
+   "suivi": "none",
+   "kw": [
+    "aide juridictionnelle",
+    "bureau d'aide juridictionnelle"
+   ],
+   "fn": [
+    "juridictionnelle"
+   ],
+   "details": [
+    [
+     "cerfa\\s*(?:n\\s*[°o]?\\s*)?(\\d{5})",
+     "Demande AJ - Cerfa {1}"
+    ]
+   ]
+  },
+  "formulaire": {
+   "label": "Formulaire administratif (Cerfa)",
+   "slug": "Formulaire",
+   "cat": "13",
+   "sub": "13-3",
+   "suivi": "none",
+   "kw": [
+    "cerfa",
+    "formulaire"
+   ],
+   "fn": [
+    "cerfa",
+    "formulaire"
+   ],
+   "details": [
+    [
+     "cerfa\\s*(?:n\\s*[°o]?\\s*)?(\\d{5})",
+     "Cerfa {1}"
+    ]
+   ]
+  }
+ },
+ "echeances": [
+  {
+   "label": "Déclaration de revenus",
+   "jour": "05-25",
+   "cat": "04",
+   "note": "date limite indicative : elle varie chaque année et selon le département"
+  }
+ ],
+ "organismes": [
+  {
+   "nom": "Impôts",
+   "url": "https://www.impots.gouv.fr/",
+   "note": "Espace particulier › Gérer mon profil"
+  },
+  {
+   "nom": "Assurance maladie (ameli)",
+   "url": "https://www.ameli.fr/",
+   "note": "Mon compte › Mes informations"
+  },
+  {
+   "nom": "CAF",
+   "url": "https://www.caf.fr/",
+   "note": "Mon compte › Mes coordonnées"
+  },
+  {
+   "nom": "France Travail",
+   "url": "https://www.francetravail.fr/",
+   "note": "Espace personnel › Mes coordonnées"
+  },
+  {
+   "nom": "Info Retraite",
+   "url": "https://www.info-retraite.fr/",
+   "note": "Mon compte retraite"
+  },
+  {
+   "nom": "ANTS (titres, permis, carte grise)",
+   "url": "https://ants.gouv.fr/",
+   "note": "Mon espace › Mon profil"
+  },
+  {
+   "nom": "Ma banque",
+   "url": "",
+   "note": "ton espace client"
+  },
+  {
+   "nom": "Mon employeur",
+   "url": "",
+   "note": "service RH ou paie"
+  },
+  {
+   "nom": "Mes assurances",
+   "url": "",
+   "note": "ton espace client"
+  }
+ ]
+}

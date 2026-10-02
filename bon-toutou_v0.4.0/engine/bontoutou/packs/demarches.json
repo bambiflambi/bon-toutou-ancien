@@ -1,0 +1,190 @@
+{
+ "format": 1,
+ "id": "demarches",
+ "name": "Démarches",
+ "version": "1.0.0",
+ "official": true,
+ "description": "Modèles de dossiers (pièces demandées)",
+ "templates": {
+  "louer_logement": {
+   "label": "Louer un logement",
+   "pieces": [
+    {
+     "label": "Pièce d'identité",
+     "types": [
+      "carte_identite",
+      "passeport"
+     ],
+     "valid": true
+    },
+    {
+     "label": "3 dernières fiches de paie",
+     "types": [
+      "bulletin_paie"
+     ],
+     "count": 3,
+     "fresh": 100
+    },
+    {
+     "label": "Dernier avis d'impôt",
+     "types": [
+      "avis_impot",
+      "ird_assessment"
+     ]
+    },
+    {
+     "label": "RIB",
+     "types": [
+      "rib"
+     ]
+    },
+    {
+     "label": "Justificatif de domicile (moins de 3 mois)",
+     "types": [
+      "facture_energie",
+      "quittance_loyer",
+      "justificatif_domicile"
+     ],
+     "fresh": 92
+    },
+    {
+     "label": "Contrat de travail",
+     "types": [
+      "contrat_travail"
+     ]
+    },
+    {
+     "label": "Attestation d'assurance habitation",
+     "types": [
+      "assurance_habitation"
+     ],
+     "valid": true
+    }
+   ],
+   "icone": "house"
+  },
+  "candidature": {
+   "label": "Candidater à un emploi",
+   "pieces": [
+    {
+     "label": "CV",
+     "types": [
+      "cv"
+     ]
+    },
+    {
+     "label": "Lettre de motivation",
+     "types": [
+      "lettre_motivation"
+     ]
+    },
+    {
+     "label": "Diplôme",
+     "types": [
+      "diplome",
+      "certificat"
+     ]
+    },
+    {
+     "label": "Pièce d'identité",
+     "types": [
+      "carte_identite",
+      "passeport"
+     ],
+     "valid": true
+    }
+   ],
+   "icone": "work"
+  },
+  "vendre_vehicule": {
+   "label": "Vendre le véhicule",
+   "pieces": [
+    {
+     "label": "Pièce d'identité",
+     "types": [
+      "passeport",
+      "carte_identite"
+     ],
+     "valid": true
+    },
+    {
+     "label": "Immatriculation (carte grise / rego)",
+     "types": [
+      "carte_grise"
+     ]
+    },
+    {
+     "label": "Contrôle technique / WOF valide",
+     "types": [
+      "controle_vehicule"
+     ],
+     "valid": true
+    },
+    {
+     "label": "Assurance du véhicule",
+     "types": [
+      "assurance_vehicule"
+     ]
+    }
+   ],
+   "icone": "car"
+  },
+  "declarer_revenus": {
+   "label": "Déclarer ses revenus",
+   "pieces": [
+    {
+     "label": "Dernier avis d'impôt",
+     "types": [
+      "avis_impot",
+      "ird_assessment"
+     ]
+    },
+    {
+     "label": "Fiches de paie de l'année",
+     "types": [
+      "bulletin_paie"
+     ],
+     "count": 12
+    },
+    {
+     "label": "Relevés bancaires",
+     "types": [
+      "releve_bancaire"
+     ],
+     "count": 3
+    }
+   ],
+   "icone": "tax"
+  },
+  "ouvrir_compte": {
+   "label": "Ouvrir un compte bancaire",
+   "pieces": [
+    {
+     "label": "Pièce d'identité",
+     "types": [
+      "carte_identite",
+      "passeport"
+     ],
+     "valid": true
+    },
+    {
+     "label": "Justificatif de domicile (moins de 3 mois)",
+     "types": [
+      "facture_energie",
+      "quittance_loyer",
+      "justificatif_domicile"
+     ],
+     "fresh": 92
+    },
+    {
+     "label": "Dernière fiche de paie",
+     "types": [
+      "bulletin_paie"
+     ],
+     "fresh": 60
+    }
+   ],
+   "icone": "bank"
+  }
+ }
+}

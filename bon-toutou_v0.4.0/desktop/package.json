@@ -1,0 +1,14 @@
+{
+  "name": "bon-toutou-desktop",
+  "private": true,
+  "version": "0.4.0",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "tauri": "tauri",
+    "icons": "tauri icon icon-source.png",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

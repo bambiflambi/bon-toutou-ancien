@@ -1,0 +1,817 @@
+{
+ "format": 1,
+ "id": "socle",
+ "name": "Socle",
+ "version": "1.0.0",
+ "official": true,
+ "description": "Catégories, dossiers, nommage, types universels",
+ "categories": {
+  "01": "Identité",
+  "02": "Logement",
+  "03": "Travail & revenus",
+  "04": "Impôts",
+  "05": "Banque",
+  "06": "Santé",
+  "07": "Assurances",
+  "08": "Mobilité",
+  "09": "Famille",
+  "10": "Patrimoine",
+  "11": "Contrats",
+  "12": "École & formation",
+  "13": "Juridique",
+  "14": "Aides",
+  "15": "Carrière"
+ },
+ "cat_folders": {
+  "01": "01_IDENTITE",
+  "02": "02_LOGEMENT",
+  "03": "03_TRAVAIL-REVENUS",
+  "04": "04_IMPOTS",
+  "05": "05_BANQUE",
+  "06": "06_SANTE",
+  "07": "07_ASSURANCES",
+  "08": "08_MOBILITE",
+  "09": "09_FAMILLE",
+  "10": "10_PATRIMOINE",
+  "11": "11_CONTRATS",
+  "12": "12_ECOLE-FORMATION",
+  "13": "13_JURIDIQUE",
+  "14": "14_AIDES",
+  "15": "15_CARRIERE"
+ },
+ "sub_folders": {
+  "01-1": "Pieces-identite",
+  "01-2": "Etat-civil",
+  "01-3": "Permis",
+  "01-4": "Titres-sejour-visas",
+  "02-1": "Bail-ou-titre",
+  "02-2": "Quittances",
+  "02-3": "Energie-eau-internet",
+  "02-4": "Travaux",
+  "02-5": "Justificatifs-adresse",
+  "03-1": "Contrats",
+  "03-2": "Bulletins-paie",
+  "03-3": "Activite-independante",
+  "03-4": "Chomage-retraite",
+  "04-1": "Declarations",
+  "04-2": "Avis",
+  "04-3": "Justificatifs",
+  "05-1": "Comptes-releves",
+  "05-2": "Cartes",
+  "05-3": "Credits",
+  "05-4": "RIB",
+  "06-1": "Couverture-secu-mutuelle",
+  "06-2": "Remboursements",
+  "06-3": "Dossier-medical",
+  "07-1": "Habitation",
+  "07-2": "Vehicule",
+  "07-3": "Responsabilite-civile",
+  "07-4": "Prevoyance-vie",
+  "07-5": "Sinistres",
+  "08-1": "Achat-vente",
+  "08-2": "Immatriculation",
+  "08-3": "Entretien-controles",
+  "08-4": "Amendes",
+  "09-1": "Union-mariage-PACS",
+  "09-2": "Enfants",
+  "09-3": "Parents-a-charge",
+  "10-1": "Immobilier",
+  "10-2": "Placements",
+  "10-3": "Parts-societe",
+  "10-4": "Transmission-testament",
+  "11-1": "Abonnements",
+  "11-2": "Telecoms",
+  "11-3": "Achats-garanties",
+  "12-1": "Diplomes",
+  "12-2": "Certificats",
+  "12-3": "Bulletins-scolaires",
+  "13-1": "Litiges",
+  "13-2": "Recommandes",
+  "13-3": "Procurations",
+  "14-1": "Allocations-CAF",
+  "14-2": "Bourses",
+  "14-3": "Aides-logement",
+  "14-4": "Autres-aides",
+  "15-1": "CV",
+  "15-2": "Lettres-motivation",
+  "15-3": "Candidatures",
+  "15-4": "Recommandations"
+ },
+ "expiry_hints": [
+  "date d'expiration",
+  "expire le",
+  "valable jusqu",
+  "valide jusqu",
+  "date de fin",
+  "expiry",
+  "expires",
+  "valid until",
+  "expiry date",
+  "due date"
+ ],
+ "emitters": [
+  [
+   "wise",
+   "Wise",
+   "INT"
+  ],
+  [
+   "revolut",
+   "Revolut",
+   "INT"
+  ]
+ ],
+ "types": {
+  "carte_identite": {
+   "label": "Carte d'identité",
+   "slug": "Carte-identite",
+   "cat": "01",
+   "sub": "01-1",
+   "suivi": "type",
+   "expiry": true,
+   "kw": [
+    "carte nationale d'identite",
+    "carte d'identite",
+    "identity card",
+    "cni"
+   ],
+   "fn": [
+    "cni",
+    "identite",
+    "id-card"
+   ]
+  },
+  "passeport": {
+   "label": "Passeport",
+   "slug": "Passeport",
+   "cat": "01",
+   "sub": "01-1",
+   "suivi": "type",
+   "expiry": true,
+   "kw": [
+    "passeport",
+    "passport"
+   ],
+   "fn": [
+    "passeport",
+    "passport"
+   ]
+  },
+  "permis_conduire": {
+   "label": "Permis de conduire",
+   "slug": "Permis-conduire",
+   "cat": "01",
+   "sub": "01-3",
+   "suivi": "type",
+   "expiry": true,
+   "kw": [
+    "permis de conduire",
+    "driver licence",
+    "driver's licence",
+    "driving licence"
+   ],
+   "fn": [
+    "permis",
+    "licence"
+   ],
+   "details": [
+    [
+     "\\bpermis\\s+(am|a1|a2|a|b1|be|b|c1|ce|c|d1|de|d)\\b",
+     "Permis {1}"
+    ]
+   ]
+  },
+  "visa": {
+   "label": "Visa / titre de séjour",
+   "slug": "Visa",
+   "cat": "01",
+   "sub": "01-4",
+   "suivi": "type",
+   "expiry": true,
+   "kw": [
+    "visa",
+    "titre de sejour",
+    "working holiday",
+    "residence permit",
+    "work visa"
+   ],
+   "fn": [
+    "visa"
+   ],
+   "details": [
+    [
+     "working holiday",
+     "Working Holiday Visa"
+    ],
+    [
+     "\\bpvt\\b|programme vacances.travail",
+     "PVT"
+    ],
+    [
+     "\\b(visitor|student|work|resident|tourist) visa\\b",
+     "{1} Visa"
+    ],
+    [
+     "titre de sejour",
+     "Titre de sejour"
+    ]
+   ]
+  },
+  "demande_visa": {
+   "label": "Demande de visa (formulaire / récapitulatif)",
+   "slug": "Demande-visa",
+   "cat": "01",
+   "sub": "01-4",
+   "suivi": "none",
+   "kw": [
+    "visa application",
+    "application form",
+    "application summary",
+    "application number",
+    "working holiday",
+    "immigration new zealand",
+    "demande de visa"
+   ],
+   "fn": [
+    "application",
+    "visa-application",
+    "demande-visa"
+   ],
+   "details": [
+    [
+     "working holiday",
+     "Working Holiday Visa - demande"
+    ],
+    [
+     "\\b(visitor|student|work|resident) visa\\b",
+     "{1} Visa - demande"
+    ]
+   ]
+  },
+  "acte_naissance": {
+   "label": "Acte de naissance",
+   "slug": "Acte-naissance",
+   "cat": "01",
+   "sub": "01-2",
+   "suivi": "type",
+   "kw": [
+    "acte de naissance",
+    "extrait d'acte",
+    "birth certificate"
+   ],
+   "fn": [
+    "naissance",
+    "birth"
+   ]
+  },
+  "bail": {
+   "label": "Bail / contrat de location",
+   "slug": "Bail",
+   "cat": "02",
+   "sub": "02-1",
+   "suivi": "emitter",
+   "kw": [
+    "contrat de location",
+    "bail d'habitation",
+    "tenancy agreement",
+    "le bailleur",
+    "le locataire"
+   ],
+   "fn": [
+    "bail",
+    "tenancy"
+   ]
+  },
+  "quittance_loyer": {
+   "label": "Quittance de loyer",
+   "slug": "Quittance-loyer",
+   "cat": "02",
+   "sub": "02-2",
+   "suivi": "emitter",
+   "period": "month",
+   "kw": [
+    "quittance de loyer",
+    "quittance",
+    "rent receipt"
+   ],
+   "fn": [
+    "quittance"
+   ]
+  },
+  "facture_energie": {
+   "label": "Facture énergie / eau / internet",
+   "slug": "Facture",
+   "cat": "02",
+   "sub": "02-3",
+   "suivi": "emitter",
+   "period": "month",
+   "kw": [
+    "electricite",
+    "consommation",
+    "kwh",
+    "gaz naturel",
+    "eau potable",
+    "abonnement internet",
+    "box internet",
+    "fibre optique",
+    "forfait mobile",
+    "power bill",
+    "broadband"
+   ],
+   "fn": [
+    "edf",
+    "engie",
+    "electricite",
+    "internet"
+   ],
+   "must": [
+    "kwh",
+    "electricite",
+    "gaz",
+    "eau",
+    "internet",
+    "fibre",
+    "forfait",
+    "telephon",
+    "power",
+    "broadband"
+   ]
+  },
+  "facture": {
+   "label": "Facture / achat",
+   "slug": "Facture",
+   "cat": "11",
+   "sub": "11-3",
+   "suivi": "none",
+   "kw": [
+    "facture",
+    "invoice",
+    "montant ttc",
+    "total ttc",
+    "net a payer ttc",
+    "tax invoice"
+   ],
+   "fn": [
+    "facture",
+    "invoice"
+   ]
+  },
+  "justificatif_domicile": {
+   "label": "Justificatif de domicile",
+   "slug": "Justificatif-domicile",
+   "cat": "02",
+   "sub": "02-5",
+   "suivi": "type",
+   "kw": [
+    "justificatif de domicile",
+    "attestation d'hebergement",
+    "attestation de domicile",
+    "proof of address"
+   ],
+   "fn": [
+    "domicile",
+    "hebergement"
+   ]
+  },
+  "contrat_travail": {
+   "label": "Contrat de travail",
+   "slug": "Contrat-travail",
+   "cat": "03",
+   "sub": "03-1",
+   "suivi": "emitter",
+   "kw": [
+    "contrat de travail",
+    "contrat a duree",
+    "employment agreement",
+    "periode d'essai"
+   ],
+   "fn": [
+    "contrat",
+    "cdi",
+    "cdd"
+   ],
+   "details": [
+    [
+     "\\b(cdi|cdd)\\b",
+     "{1}"
+    ],
+    [
+     "contrat a duree indeterminee",
+     "CDI"
+    ],
+    [
+     "contrat a duree determinee",
+     "CDD"
+    ],
+    [
+     "contrat d'apprentissage",
+     "Apprentissage"
+    ],
+    [
+     "convention de stage",
+     "Stage"
+    ]
+   ],
+   "par_emetteur": true
+  },
+  "bulletin_paie": {
+   "label": "Fiche de paie",
+   "slug": "Bulletin-paie",
+   "cat": "03",
+   "sub": "03-2",
+   "suivi": "emitter",
+   "period": "month",
+   "must": [
+    "bulletin de paie",
+    "bulletin de salaire",
+    "fiche de paie",
+    "payslip",
+    "net a payer"
+   ],
+   "kw": [
+    "bulletin de paie",
+    "bulletin de salaire",
+    "fiche de paie",
+    "net a payer",
+    "salaire brut",
+    "payslip",
+    "net pay"
+   ],
+   "fn": [
+    "paie",
+    "salaire",
+    "payslip",
+    "bulletin"
+   ],
+   "par_emetteur": true
+  },
+  "releve_bancaire": {
+   "label": "Relevé bancaire",
+   "slug": "Releve",
+   "cat": "05",
+   "sub": "05-1",
+   "suivi": "emitter",
+   "period": "month",
+   "kw": [
+    "releve de compte",
+    "releve bancaire",
+    "solde crediteur",
+    "ancien solde",
+    "nouveau solde",
+    "bank statement",
+    "closing balance"
+   ],
+   "fn": [
+    "releve",
+    "statement"
+   ]
+  },
+  "rib": {
+   "label": "RIB",
+   "slug": "RIB",
+   "cat": "05",
+   "sub": "05-4",
+   "suivi": "emitter",
+   "kw": [
+    "releve d'identite bancaire",
+    "rib",
+    "iban",
+    "bic"
+   ],
+   "fn": [
+    "rib",
+    "iban"
+   ]
+  },
+  "certificat_medical": {
+   "label": "Certificat médical / justificatif de consultation",
+   "slug": "Certificat-medical",
+   "cat": "06",
+   "sub": "06-3",
+   "suivi": "none",
+   "kw": [
+    "certificat medical",
+    "certificat de presence",
+    "attestation de presence",
+    "a ete recu en consultation",
+    "a consulte",
+    "arret de travail",
+    "docteur",
+    "cabinet medical",
+    "cabinet dentaire",
+    "chirurgien-dentiste",
+    "medecin"
+   ],
+   "fn": [
+    "medical",
+    "medecin",
+    "dentiste",
+    "dents",
+    "dentaire",
+    "consultation",
+    "arret"
+   ],
+   "details": [
+    [
+     "(certificat|attestation) de presence",
+     "Attestation de presence"
+    ],
+    [
+     "arret de travail",
+     "Arret de travail"
+    ],
+    [
+     "certificat (medical )?d'aptitude|aptitude au sport|non contre-indication",
+     "Certificat aptitude sport"
+    ],
+    [
+     "certificat medical",
+     "Certificat medical"
+    ]
+   ]
+  },
+  "remboursement_sante": {
+   "label": "Remboursement santé",
+   "slug": "Remboursement",
+   "cat": "06",
+   "sub": "06-2",
+   "suivi": "emitter",
+   "period": "month",
+   "kw": [
+    "decompte",
+    "remboursement",
+    "releve de prestations"
+   ],
+   "fn": [
+    "decompte",
+    "remboursement"
+   ]
+  },
+  "assurance_habitation": {
+   "label": "Assurance habitation",
+   "slug": "Assurance-habitation",
+   "cat": "07",
+   "sub": "07-1",
+   "suivi": "emitter",
+   "expiry": true,
+   "kw": [
+    "assurance habitation",
+    "multirisque habitation",
+    "attestation d'assurance habitation",
+    "home insurance",
+    "contents insurance"
+   ],
+   "fn": [
+    "habitation"
+   ]
+  },
+  "assurance_vehicule": {
+   "label": "Assurance véhicule",
+   "slug": "Assurance-vehicule",
+   "cat": "07",
+   "sub": "07-2",
+   "suivi": "emitter",
+   "expiry": true,
+   "kw": [
+    "assurance automobile",
+    "assurance auto",
+    "vehicle insurance",
+    "car insurance",
+    "motor insurance"
+   ],
+   "fn": [
+    "assurance-auto"
+   ]
+  },
+  "assurance_voyage": {
+   "label": "Assurance voyage / prévoyance",
+   "slug": "Assurance-voyage",
+   "cat": "07",
+   "sub": "07-4",
+   "suivi": "emitter",
+   "expiry": true,
+   "kw": [
+    "assurance voyage",
+    "travel insurance",
+    "prevoyance"
+   ],
+   "fn": [
+    "voyage",
+    "travel"
+   ]
+  },
+  "carte_grise": {
+   "label": "Immatriculation (carte grise / rego)",
+   "slug": "Immatriculation",
+   "cat": "08",
+   "sub": "08-2",
+   "suivi": "type",
+   "expiry": true,
+   "kw": [
+    "certificat d'immatriculation",
+    "carte grise",
+    "vehicle licence",
+    "registration",
+    "rego"
+   ],
+   "fn": [
+    "carte-grise",
+    "rego"
+   ]
+  },
+  "controle_vehicule": {
+   "label": "Contrôle technique / WOF",
+   "slug": "Controle-vehicule",
+   "cat": "08",
+   "sub": "08-3",
+   "suivi": "type",
+   "expiry": true,
+   "kw": [
+    "warrant of fitness",
+    "wof",
+    "controle technique",
+    "proces-verbal de controle"
+   ],
+   "fn": [
+    "wof",
+    "controle"
+   ]
+  },
+  "amende": {
+   "label": "Amende",
+   "slug": "Amende",
+   "cat": "08",
+   "sub": "08-4",
+   "suivi": "none",
+   "kw": [
+    "avis de contravention",
+    "amende",
+    "infringement notice"
+   ],
+   "fn": [
+    "amende",
+    "infringement"
+   ]
+  },
+  "diplome": {
+   "label": "Diplôme",
+   "slug": "Diplome",
+   "cat": "12",
+   "sub": "12-1",
+   "suivi": "none",
+   "kw": [
+    "diplome",
+    "diploma",
+    "degree",
+    "certificat d'aptitude",
+    "cap ",
+    "baccalaureat",
+    "brevet des colleges",
+    "diplome national",
+    "licence",
+    "master",
+    "bts"
+   ],
+   "fn": [
+    "diplome",
+    "diploma",
+    "bac",
+    "brevet",
+    "licence",
+    "master"
+   ],
+   "details": [
+    [
+     "\\bbaccalaureat\\s+(general|professionnel|technologique)",
+     "Baccalaureat {1}"
+    ],
+    [
+     "\\bbaccalaureat\\b",
+     "Baccalaureat"
+    ],
+    [
+     "diplome national du brevet|brevet des colleges",
+     "Brevet des colleges"
+    ],
+    [
+     "\\b(bts|dut|but|cap|bep|bafa|bafd|deust|dnb)\\b",
+     "{1}"
+    ],
+    [
+     "\\b(licence|master|doctorat)\\s+(?:professionnelle?\\s+)?(?:de\\s+|en\\s+|mention\\s+)?([a-z][a-z \\-]{3,30}?)(?=\\n|$|,|\\.)",
+     "{1} {2}"
+    ],
+    [
+     "\\b(licence|master|doctorat)\\b",
+     "{1}"
+    ],
+    [
+     "\\bbachelor of ([a-z ]{3,30})",
+     "Bachelor of {1}"
+    ]
+   ]
+  },
+  "certificat": {
+   "label": "Certificat / attestation de formation",
+   "slug": "Certificat",
+   "cat": "12",
+   "sub": "12-2",
+   "suivi": "none",
+   "kw": [
+    "attestation de formation",
+    "attestation de suivi",
+    "certificat de formation",
+    "certificate of",
+    "heures de cours",
+    "psc1",
+    "prevention et secours civiques",
+    "sauveteur secouriste",
+    "first aid",
+    "toeic",
+    "toefl",
+    "ielts",
+    "delf",
+    "caces",
+    "haccp"
+   ],
+   "fn": [
+    "certificate",
+    "formation",
+    "diplome"
+   ],
+   "details": [
+    [
+     "\\bpsc ?1\\b|prevention et secours civiques",
+     "PSC1"
+    ],
+    [
+     "sauveteur secouriste du travail|\\bsst\\b",
+     "SST"
+    ],
+    [
+     "\\b(toeic|toefl|ielts|delf|dalf|tcf|cambridge)\\b",
+     "{1}"
+    ],
+    [
+     "\\bfirst aid\\b",
+     "First Aid"
+    ],
+    [
+     "\\b(caces)\\s*r?\\s*(\\d{3})?",
+     "CACES"
+    ],
+    [
+     "\\bhaccp\\b",
+     "HACCP"
+    ]
+   ]
+  },
+  "cv": {
+   "label": "CV",
+   "slug": "CV",
+   "cat": "15",
+   "sub": "15-1",
+   "suivi": "type",
+   "kw": [
+    "curriculum vitae",
+    "experiences professionnelles",
+    "competences",
+    "work experience"
+   ],
+   "fn": [
+    "cv",
+    "resume"
+   ]
+  },
+  "lettre_motivation": {
+   "label": "Lettre de motivation",
+   "slug": "Lettre-motivation",
+   "cat": "15",
+   "sub": "15-2",
+   "suivi": "none",
+   "kw": [
+    "lettre de motivation",
+    "madame, monsieur",
+    "cover letter"
+   ],
+   "fn": [
+    "motivation",
+    "cover"
+   ]
+  },
+  "autre": {
+   "label": "Autre document",
+   "slug": "Document",
+   "cat": "11",
+   "sub": "11-1",
+   "suivi": "none",
+   "kw": [],
+   "fn": []
+  }
+ },
+ "contribution": {
+  "email": "",
+  "url": "",
+  "depot": "bambiflambi/bon-toutou"
+ }
+}

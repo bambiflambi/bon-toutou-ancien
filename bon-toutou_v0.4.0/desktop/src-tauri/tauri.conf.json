@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Bon toutou",
+  "version": "0.4.0",
+  "identifier": "org.bontoutou.app",
+  "build": { "frontendDist": "../dist" },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      { "label": "main", "title": "Bon toutou", "width": 1180, "height": 820, "minWidth": 380, "minHeight": 560 }
+    ],
+    "security": {
+      "csp": null,
+      "capabilities": ["default"]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Ton dossier administratif vivant",
+    "longDescription": "Bon toutou range tes papiers administratifs dans un seul dossier sur ton ordinateur. Zéro serveur, zéro compte : rien ne sort sans ton accord.",
+    "copyright": "Bon toutou — AGPL-3.0",
+    "externalBin": ["binaries/bontoutou-engine"],
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "macOS": { "minimumSystemVersion": "11.0" }
+  }
+}

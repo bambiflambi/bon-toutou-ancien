@@ -1,0 +1,148 @@
+{
+ "format": 1,
+ "id": "pays-nz",
+ "name": "Pays : Nouvelle-Zélande",
+ "version": "1.0.0",
+ "official": true,
+ "description": "Organismes, types et indices propres à la Nouvelle-Zélande",
+ "countries": {
+  "NZ": {
+   "name": "Nouvelle-Zélande",
+   "folder": "NZ_NOUVELLE-ZELANDE"
+  }
+ },
+ "country_hints": {
+  "NZ": [
+   "new zealand",
+   "aotearoa",
+   "nzd",
+   "nz$",
+   "inland revenue",
+   "ird number",
+   "nzta",
+   "waka kotahi",
+   "kiwibank",
+   "asb bank",
+   "westpac",
+   "bnz",
+   "anz bank",
+   "warrant of fitness",
+   "immigration new zealand",
+   " gst"
+  ]
+ },
+ "emitters": [
+  [
+   "inland revenue",
+   "IRD",
+   "NZ"
+  ],
+  [
+   "ird.govt",
+   "IRD",
+   "NZ"
+  ],
+  [
+   "nzta",
+   "NZTA",
+   "NZ"
+  ],
+  [
+   "waka kotahi",
+   "NZTA",
+   "NZ"
+  ],
+  [
+   "immigration new zealand",
+   "Immigration-NZ",
+   "NZ"
+  ],
+  [
+   "kiwibank",
+   "Kiwibank",
+   "NZ"
+  ],
+  [
+   "asb bank",
+   "ASB",
+   "NZ"
+  ],
+  [
+   "westpac",
+   "Westpac",
+   "NZ"
+  ],
+  [
+   "bnz",
+   "BNZ",
+   "NZ"
+  ],
+  [
+   "anz",
+   "ANZ",
+   "NZ"
+  ],
+  [
+   "aa insurance",
+   "AA-Insurance",
+   "NZ"
+  ]
+ ],
+ "types": {
+  "ird_assessment": {
+   "label": "Avis fiscal IRD",
+   "slug": "IRD-Assessment",
+   "cat": "04",
+   "sub": "04-2",
+   "suivi": "type",
+   "period": "year",
+   "countries": [
+    "NZ"
+   ],
+   "kw": [
+    "inland revenue",
+    "income tax assessment",
+    "ird number",
+    "tax assessment"
+   ],
+   "fn": [
+    "ird"
+   ]
+  }
+ },
+ "echeances": [
+  {
+   "label": "Déclaration IR3 (si tu dois en faire une)",
+   "jour": "07-07",
+   "cat": "04",
+   "note": "date limite indicative de l'Inland Revenue"
+  }
+ ],
+ "organismes": [
+  {
+   "nom": "Inland Revenue (myIR)",
+   "url": "https://myir.ird.govt.nz/",
+   "note": "Profile › Contact details"
+  },
+  {
+   "nom": "Immigration New Zealand",
+   "url": "https://www.immigration.govt.nz/",
+   "note": "Immigration Online account"
+  },
+  {
+   "nom": "NZ Transport Agency (Waka Kotahi)",
+   "url": "https://www.nzta.govt.nz/",
+   "note": "Change your address"
+  },
+  {
+   "nom": "Ma banque NZ",
+   "url": "",
+   "note": "ton espace client"
+  },
+  {
+   "nom": "Mon employeur NZ",
+   "url": "",
+   "note": "payroll"
+  }
+ ]
+}

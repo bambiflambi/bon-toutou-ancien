@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D9B060"/><stop offset="1" stop-color="#9C7820"/></linearGradient></defs>
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="url(#g)"/>
+  <!-- oreilles tombantes -->
+  <path d="M400 280 C260 270 180 380 200 520 C210 600 260 645 312 612 C342 592 350 520 352 440 Z" fill="#6E5416"/>
+  <path d="M624 280 C764 270 844 380 824 520 C814 600 764 645 712 612 C682 592 674 520 672 440 Z" fill="#6E5416"/>
+  <!-- tête -->
+  <path d="M512 250 C640 250 720 340 720 470 C720 560 690 620 650 660 C610 700 570 760 512 760 C454 760 414 700 374 660 C334 620 304 560 304 470 C304 340 384 250 512 250 Z" fill="#FFF8EA"/>
+  <!-- museau -->
+  <ellipse cx="512" cy="630" rx="120" ry="95" fill="#F3E3C0"/>
+  <!-- yeux -->
+  <circle cx="440" cy="480" r="30" fill="#2B2216"/><circle cx="584" cy="480" r="30" fill="#2B2216"/>
+  <circle cx="450" cy="470" r="9" fill="#fff"/><circle cx="594" cy="470" r="9" fill="#fff"/>
+  <!-- truffe -->
+  <path d="M468 585 C468 560 556 560 556 585 C556 615 530 635 512 635 C494 635 468 615 468 585 Z" fill="#2B2216"/>
+  <path d="M512 635 L512 665 M512 665 C495 690 465 690 455 675 M512 665 C529 690 559 690 569 675" stroke="#2B2216" stroke-width="14" stroke-linecap="round" fill="none"/>
+</svg>

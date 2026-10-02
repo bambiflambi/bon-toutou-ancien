@@ -1,0 +1,114 @@
+# Fabrication automatique de Bon toutou : tests, puis l'app pour chaque système.
+# - À chaque envoi de code : les tests (Python 3.9 et 3.12).
+# - À chaque version marquée (ex. v0.2.0) : les apps Mac (Intel + puce Apple), Windows et Linux,
+#   publiées en brouillon dans « Releases » (on relit, puis on publie à la main).
+name: Fabrication
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Tests du moteur
+        working-directory: engine
+        run: |
+          pip install pypdf
+          for t in flow sortie regles ia app; do python -m tests.test_$t; done
+
+  app:
+    needs: tests
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15-intel    # Mac Intel
+            target: x86_64-apple-darwin
+            llama: "-DGGML_METAL=off"
+          - os: macos-14          # Mac à puce Apple
+            target: aarch64-apple-darwin
+            llama: "-DGGML_METAL=on"
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            llama: ""
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            llama: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Empreintes des modèles d'IA (Hugging Face)
+        run: python tools/pin_models.py engine/bontoutou/packs/modeles.json
+
+      - name: Moteur embarqué (PyInstaller + llama.cpp compilé pour ce système)
+        working-directory: engine
+        shell: bash
+        env:
+          CMAKE_ARGS: ${{ matrix.llama }}
+        run: |
+          pip install pyinstaller -r requirements-app.txt
+          SEP=":"; [ "$RUNNER_OS" = "Windows" ] && SEP=";"
+          pyinstaller --onefile --noconsole --name bontoutou-engine \
+            --add-data "static${SEP}static" --add-data "bontoutou/packs${SEP}bontoutou/packs" \
+            --collect-all llama_cpp --hidden-import pypdf \
+            $( [ "$RUNNER_OS" = "macOS" ] && echo "--collect-all ocrmac" ) \
+            entry.py
+          EXT=""; [ "$RUNNER_OS" = "Windows" ] && EXT=".exe"
+          mkdir -p ../desktop/src-tauri/binaries
+          cp "dist/bontoutou-engine${EXT}" "../desktop/src-tauri/binaries/bontoutou-engine-${{ matrix.target }}${EXT}"
+
+      - name: Bibliothèques Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Icônes
+        working-directory: desktop
+        run: npm install && npx tauri icon icon-source.png
+
+      - name: App de bureau (brouillon dans Releases)
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: desktop
+          tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+          releaseName: "Bon toutou ${{ github.ref_name }}"
+          releaseBody: "Voir CHANGELOG.md. Mises à jour jamais obligatoires. Sur Mac (app non signée) : clic droit › Ouvrir, une seule fois."
+          releaseDraft: true
+          args: --target ${{ matrix.target }}
+
+      - name: Copie de l'app (même sans version marquée)
+        if: "!startsWith(github.ref, 'refs/tags/v')"
+        uses: actions/upload-artifact@v4
+        with:
+          name: bon-toutou-${{ matrix.target }}
+          path: desktop/src-tauri/target/${{ matrix.target }}/release/bundle/

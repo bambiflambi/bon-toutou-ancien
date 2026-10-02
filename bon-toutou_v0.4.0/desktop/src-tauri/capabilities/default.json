@@ -1,0 +1,55 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "La fenêtre de Bon toutou (moteur local sur 127.0.0.1) peut seulement : ouvrir le sélecteur de dossier, et ouvrir dans ton navigateur la page publique de Bon toutou, ta messagerie ou le site officiel d'un organisme (liste fixe, tirée des packs pays).",
+  "windows": [
+    "main"
+  ],
+  "remote": {
+    "urls": [
+      "http://127.0.0.1:*"
+    ]
+  },
+  "permissions": [
+    "core:default",
+    "dialog:allow-open",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        {
+          "url": "https://github.com/*"
+        },
+        {
+          "url": "mailto:*"
+        },
+        {
+          "url": "https://ants.gouv.fr/*"
+        },
+        {
+          "url": "https://myir.ird.govt.nz/*"
+        },
+        {
+          "url": "https://www.ameli.fr/*"
+        },
+        {
+          "url": "https://www.caf.fr/*"
+        },
+        {
+          "url": "https://www.francetravail.fr/*"
+        },
+        {
+          "url": "https://www.immigration.govt.nz/*"
+        },
+        {
+          "url": "https://www.impots.gouv.fr/*"
+        },
+        {
+          "url": "https://www.info-retraite.fr/*"
+        },
+        {
+          "url": "https://www.nzta.govt.nz/*"
+        }
+      ]
+    }
+  ]
+}
